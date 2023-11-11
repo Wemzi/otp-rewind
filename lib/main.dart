@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import "backend.dart";
 
 void main() {
   runApp(const MyApp());
@@ -54,65 +56,42 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  final _pagecontroller = PageController(initialPage: 0);
+final lightGreen = Colors.green.shade300;
+final mediumGreen = Colors.green.shade600;
+final darkGreen = Colors.green.shade900;
 
-  @override
-  void dispose()
-  {
-    _pagecontroller.dispose();
-    super.dispose();
-  }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class OpeningPage extends StatelessWidget {
+  User? currentUser;
+
+  OpeningPage(User? currentUser, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return PageView(
-      controller:_pagecontroller,
-      children: [
-            const MyPage1Widget(),
-            Scaffold(
-                body: Center( child:
-                  Row(children:
-                    <Widget>[
-                      const Text(
-                        'You have pushed the button this many times:',
-                      ),
-                      Text(
-                        '$_counter',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    ]
-                  )
-              ),
-              floatingActionButton:
-              FloatingActionButton(onPressed: _incrementCounter),
-            ),
+    return Column(
+      children: <Widget>[
+        Row(
+          children: [
+            MyBox(darkGreen,height: 50),
+          ],
+        ),
+        Row(
+          children: [
+            MyBox(lightGreen,),
+            MyBox(lightGreen),
+          ],
+        ),
+        MyBox(mediumGreen, text: currentUser == null ? "" : currentUser!.name),
+        Row(
+          children: [
+            MyBox(lightGreen, height: 200),
+            MyBox(lightGreen, height: 200),
+          ],
+        ),
       ],
     );
   }
 }
-
-final lightGreen = Colors.green.shade300;
-final mediumGreen = Colors.green.shade600;
-final darkGreen = Colors.green.shade900;
 
 class MyPage1Widget extends StatelessWidget {
   const MyPage1Widget({super.key});
@@ -128,7 +107,7 @@ class MyPage1Widget extends StatelessWidget {
         ),
         Row(
           children: [
-            MyBox(lightGreen),
+            MyBox(lightGreen, text: 'Üdvözöljük! '),
             MyBox(lightGreen),
           ],
         ),
@@ -143,6 +122,7 @@ class MyPage1Widget extends StatelessWidget {
     );
   }
 }
+
 
 class MyBox extends StatelessWidget {
   final Color color;
@@ -173,3 +153,69 @@ class MyBox extends StatelessWidget {
     );
   }
 }
+
+class _MyHomePageState extends State<MyHomePage> {
+  int _counter = 0;
+  bool? isLogin;
+  final _pageController = PageController(initialPage: 0);
+  User? currentUser;
+
+  @override
+  void dispose()
+  {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void login() async
+  {
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+
+    _counter++;
+    });
+    isLogin = true;
+    Response r = await getUserInfo(2);
+    currentUser = fromJson(r.body);
+    setState((){
+      isLogin=false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PageView(
+      controller:_pageController,
+      children: [
+        OpeningPage(currentUser),
+        const MyPage1Widget(),
+        Scaffold(
+          body: Center( child:
+          Column(children:
+          <Widget>[
+            const Padding(padding: EdgeInsets.only(top:100.0)),
+            const Text(
+              'You have pushed the login button this many times:',
+            ),
+            Text(
+              '$_counter'
+              '$isLogin'
+              '$currentUser!.name',
+              style: Theme.of(context).textTheme.headlineMedium,
+            ),
+          ]
+          )
+          ),
+          floatingActionButton:
+          FloatingActionButton(onPressed: login),
+        ),
+      ],
+    );
+  }
+}
+
+
