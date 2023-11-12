@@ -179,8 +179,8 @@ class _MyHomePageState extends State<MyHomePage> {
     _counter++;
     });
     isLogin = true;
-    Response r = await getUserInfo(2);
-    currentUser = fromJson(r.body);
+    currentUser = await getUserInfo(2);
+    print(currentUser?.name);
     setState((){
       isLogin=false;
     });
@@ -199,12 +199,11 @@ class _MyHomePageState extends State<MyHomePage> {
           <Widget>[
             const Padding(padding: EdgeInsets.only(top:100.0)),
             const Text(
-              'You have pushed the login button this many times:',
+              'Press the log in button at the bottom:',
             ),
-            Text(
-              '$_counter'
-              '$isLogin'
-              '$currentUser!.name',
+            Text(currentUser == null ?
+                "No logged in user":
+              '${currentUser?.name}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
           ]

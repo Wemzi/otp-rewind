@@ -7,9 +7,29 @@ getUserInfo(int userId) async {
   String basicAuth =
       'Basic ' + base64.encode(utf8.encode('$username:$password'));
 
-  Response r = await get(Uri.parse('http://lucky42.duckdns.org:4224/$userId'),
-      headers: <String, String>{'authorization': basicAuth});
-  return r;
+  //Response r = await get(Uri.parse('http://lucky42.duckdns.org:4224/$userId'),
+  //    headers: <String, String>{'authorization': basicAuth});
+ /* if(r.statusCode!=200)
+    {
+      throw Exception("The server did not react with the expected return code.");
+    }
+
+  */
+  jsonEncode(<String,String>{
+    'id': '1',
+    'name': 'Kis János',
+    'country': 'Hungary',
+    'birthdate': '1997-07-21'
+    }
+  );
+
+  var data = jsonDecode('{"id":"1","name":"Kis János","country":"Hungary","birthdate":"1997-07-21"}');
+  return User(
+      int.tryParse(data['id']) as int,
+      data['name'] as String,
+      data['country'] as String,
+      data['birthdate'] as String
+  );
 }
 
 
@@ -24,17 +44,6 @@ class User {
     this.name = name;
     this.country=country;
     this.birthdate=birthDate;
+    print(this.name);
   }
-}
-
-User fromJson(String jsonRaw)  {
-  var data;
-  data = jsonDecode(jsonRaw);
-
-  return User(
-      data['id'] as int,
-      data['name'] as String,
-      data['country'] as String,
-      data['birthdate'] as String
-  );
 }
