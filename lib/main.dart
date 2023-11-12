@@ -60,7 +60,7 @@ final lightGreen = Colors.green.shade300;
 final mediumGreen = Colors.green.shade600;
 final darkGreen = Colors.green.shade900;
 
-
+//TODO: has to be stateful, as user informations are popping up here
 class OpeningPage extends StatelessWidget {
   User? currentUser;
 
@@ -81,7 +81,7 @@ class OpeningPage extends StatelessWidget {
             MyBox(lightGreen),
           ],
         ),
-        MyBox(mediumGreen, text: currentUser == null ? "" : currentUser!.name),
+        MyBox(mediumGreen, text: currentUser == null ? "" : '${currentUser!.name}'),
         Row(
           children: [
             MyBox(lightGreen, height: 200),
@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Press the log in button at the bottom:',
             ),
             Text(currentUser == null ?
-                "No logged in user":
+              "No logged in user":
               '${currentUser?.name}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),

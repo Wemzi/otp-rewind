@@ -39,11 +39,6 @@ class User {
   String? country;
   String? birthdate;
 
-  User(int id, String name, String country, String birthDate) {
-    this.id = id;
-    this.name = name;
-    this.country=country;
-    this.birthdate=birthDate;
-    print(this.name);
-  }
+  User(int this.id, String this.name, String this.country,
+      String this.birthdate);
 }
