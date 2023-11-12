@@ -4,17 +4,20 @@ import 'package:http/http.dart';
 getUserInfo(int userId) async {
   String username = 'otp_rewind_client';
   String password = 'xENe5umCBvAUNBn';
-  String basicAuth =
-      'Basic ' + base64.encode(utf8.encode('$username:$password'));
-
-  //Response r = await get(Uri.parse('http://lucky42.duckdns.org:4224/$userId'),
-  //    headers: <String, String>{'authorization': basicAuth});
- /* if(r.statusCode!=200)
+  String basicAuth = 'Basic ${base64.encode(utf8.encode('$username:$password'))}';
+  /*
+  Response r = await get(Uri.parse('http://lucky42.duckdns.org:4224/$userId'),
+      headers: <String, String>{'authorization': basicAuth});
+   if(r.statusCode!=200)
     {
       throw Exception("The server did not react with the expected return code.");
     }
+  var data = jsonDecode(r.body)
 
-  */
+   */
+
+
+  //fallback  code if the server is not available
   jsonEncode(<String,String>{
     'id': '1',
     'name': 'Kis János',
@@ -24,6 +27,8 @@ getUserInfo(int userId) async {
   );
 
   var data = jsonDecode('{"id":"1","name":"Kis János","country":"Hungary","birthdate":"1997-07-21"}');
+
+
   return User(
       int.tryParse(data['id']) as int,
       data['name'] as String,
@@ -42,3 +47,5 @@ class User {
   User(int this.id, String this.name, String this.country,
       String this.birthdate);
 }
+
+User? currentUser;

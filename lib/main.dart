@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import "backend.dart";
+import "backend.dart" as backend;
 
 void main() {
   runApp(const MyApp());
@@ -61,10 +61,10 @@ final mediumGreen = Colors.green.shade600;
 final darkGreen = Colors.green.shade900;
 
 //TODO: has to be stateful, as user informations are popping up here
-class OpeningPage extends StatelessWidget {
-  User? currentUser;
+class OpeningPage extends StatefulWidget {
 
-  OpeningPage(User? currentUser, {super.key});
+  @override
+  State<OpeningPage> createState() => _OpeningPageState();
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +81,7 @@ class OpeningPage extends StatelessWidget {
             MyBox(lightGreen),
           ],
         ),
-        MyBox(mediumGreen, text: currentUser == null ? "" : '${currentUser!.name}'),
+        MyBox(mediumGreen, text: backend.currentUser == null ? "" : '${backend.currentUser!.name}'),
         Row(
           children: [
             MyBox(lightGreen, height: 200),
@@ -92,6 +92,48 @@ class OpeningPage extends StatelessWidget {
     );
   }
 }
+
+
+//Contains balance info, account holder name, OTP Rewind button.
+class _OpeningPageState extends State<OpeningPage> {
+  bool? isLogin;
+  final _pageController = PageController(initialPage: 0);
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Row(
+          children: [
+            MyBox(darkGreen,height: 50),
+          ],
+        ),
+        Row(
+          children: [
+            MyBox(lightGreen,),
+            MyBox(lightGreen),
+          ],
+        ),
+        MyBox(mediumGreen, text: backend.currentUser == null ? "" :
+                                '${backend.currentUser!.name}'),
+        Row(
+          children: [
+            MyBox(lightGreen, height: 200),
+            MyBox(lightGreen, height: 200),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+
 
 class MyPage1Widget extends StatelessWidget {
   const MyPage1Widget({super.key});
@@ -155,10 +197,8 @@ class MyBox extends StatelessWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-  bool? isLogin;
+  bool isLogin = false;
   final _pageController = PageController(initialPage: 0);
-  User? currentUser;
 
   @override
   void dispose()
@@ -169,18 +209,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void login() async
   {
+    //tells ui to refresh
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-
-    _counter++;
+      isLogin = true;
     });
-    isLogin = true;
-    currentUser = await getUserInfo(2);
-    print(currentUser?.name);
+    backend.currentUser = await backend.getUserInfo(2);
+
     setState((){
       isLogin=false;
     });
@@ -191,27 +225,29 @@ class _MyHomePageState extends State<MyHomePage> {
     return PageView(
       controller:_pageController,
       children: [
-        OpeningPage(currentUser),
-        const MyPage1Widget(),
         Scaffold(
           body: Center( child:
           Column(children:
           <Widget>[
-            const Padding(padding: EdgeInsets.only(top:100.0)),
-            const Text(
-              'Press the log in button at the bottom:',
-            ),
-            Text(currentUser == null ?
-              "No logged in user":
-              '${currentUser?.name}',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+          const Padding(padding: EdgeInsets.only(top:100.0)),
+          const Text(
+          'Üdvözöljük! Kérjük jelentkezzen be.',
+          ),
+          Text(backend.currentUser == null ?
+          (isLogin ? "Logging in..." : "No logged in user") :
+          '${backend.currentUser?.name}',
+          style: Theme.of(context).textTheme.headlineMedium,
+          ),
           ]
           )
           ),
           floatingActionButton:
-          FloatingActionButton(onPressed: login),
+          FloatingActionButton.extended(onPressed: login,
+                label: const Text("Belépés"), backgroundColor: lightGreen,
+            splashColor: Colors.lightGreen.shade100,)
         ),
+        OpeningPage(),
+        const MyPage1Widget(),
       ],
     );
   }
