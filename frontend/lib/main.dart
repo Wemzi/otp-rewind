@@ -197,11 +197,26 @@ class MyBox extends StatelessWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isLogin = false;
   final _pageController = PageController(initialPage: 0);
+  final _controllerBackground = ScrollController();
+  final _controllerText = ScrollController();
+
+  void scrollListener() {
+    _controllerBackground.jumpTo(_controllerText.offset);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controllerText.addListener(scrollListener);
+  }
 
   @override
   void dispose()
   {
     _pageController.dispose();
+    _controllerText.removeListener(scrollListener);
+    _controllerBackground.dispose();
+    _controllerText.dispose();
     super.dispose();
   }
 
@@ -226,14 +241,41 @@ class _MyHomePageState extends State<MyHomePage> {
         Scaffold(
           body: Stack(
           children: <Widget>
-              [
+              [Container(
+                child: SingleChildScrollView(
+                  controller: _controllerBackground,
+                    scrollDirection: Axis.vertical,
+                    child: Image.asset("resources/images/main_blank.jpg"),
+                    ),
+                ),
                 SingleChildScrollView(
+                  controller: _controllerText,
                   scrollDirection: Axis.vertical,
-                  child: Image.asset('resources/images/main_blank.jpg',
-                    fit:BoxFit.fitWidth
+                  child: Container(
+                    width: MediaQuery. of(context). size. width,
+                    height: 5331,
+                    child: Column(
+                      children: <Widget> [
+                          const Row(
+                            children: [
+                              Padding(padding: EdgeInsets.all(27.0))
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 5,bottom:0,right:0,top:0), //apply padding to all four sides
+                                child: const Text("KISS PÉTER",
+                                        style: TextStyle(color: Colors.white),
+                                        )
+                                ),
+                            ],
+                          )
+                      ],
+                    ),
                   ),
                 ),
-              ]
+              ],
           ),
         ),
         OpeningPage(),
