@@ -164,7 +164,6 @@ class MyPage1Widget extends StatelessWidget {
   }
 }
 
-
 class MyBox extends StatelessWidget {
   final Color color;
   final double? height;
@@ -225,25 +224,17 @@ class _MyHomePageState extends State<MyHomePage> {
       controller:_pageController,
       children: [
         Scaffold(
-          body: Center( child:
-          Column(children:
-          <Widget>[
-          const Padding(padding: EdgeInsets.only(top:100.0)),
-          const Text(
-          'Üdvözöljük! Kérjük jelentkezzen be.',
+          body: Stack(
+          children: <Widget>
+              [
+                SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Image.asset('resources/images/main_blank.jpg',
+                    fit:BoxFit.fitWidth
+                  ),
+                ),
+              ]
           ),
-          Text(backend.currentUser == null ?
-          (isLogin ? "Logging in..." : "No logged in user") :
-          '${backend.currentUser?.name}',
-          style: Theme.of(context).textTheme.headlineMedium,
-          ),
-          ]
-          )
-          ),
-          floatingActionButton:
-          FloatingActionButton.extended(onPressed: login,
-                label: const Text("Belépés"), backgroundColor: lightGreen,
-            splashColor: Colors.lightGreen.shade100,)
         ),
         OpeningPage(),
         const MyPage1Widget(),
