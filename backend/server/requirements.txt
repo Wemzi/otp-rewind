@@ -1,0 +1,5 @@
+mysqlclient
+Django
+djangorestframework
+pyspark
+cassandra-driver
