@@ -96,7 +96,6 @@ class OpeningPage extends StatefulWidget {
 
 //Contains balance info, account holder name, OTP Rewind button.
 class _OpeningPageState extends State<OpeningPage> {
-  bool? isLogin;
   final _pageController = PageController(initialPage: 0);
 
   @override
@@ -213,7 +212,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       isLogin = true;
     });
-    backend.currentUser = await backend.getUserInfo(2);
+    backend.currentUser = await backend.getUserInfo(3);
 
     setState((){
       isLogin=false;
