@@ -59,8 +59,6 @@ class MyHomePage extends StatefulWidget {
 final lightGreen = Colors.green.shade300;
 final mediumGreen = Colors.green.shade600;
 final darkGreen = Colors.green.shade900;
-
-//TODO: has to be stateful, as user informations are popping up here
 class OpeningPage extends StatefulWidget {
 
   @override
@@ -77,11 +75,11 @@ class OpeningPage extends StatefulWidget {
         ),
         Row(
           children: [
-            MyBox(lightGreen,),
+            MyBox(lightGreen),
             MyBox(lightGreen),
           ],
         ),
-        MyBox(mediumGreen, text: backend.currentUser == null ? "" : '${backend.currentUser!.name}'),
+        MyBox(mediumGreen, insideText: Text(backend.currentUser == null ? "" : '${backend.currentUser!.name}', style:const TextStyle(color: Colors.white,fontSize:30))),
         Row(
           children: [
             MyBox(lightGreen, height: 200),
@@ -108,25 +106,14 @@ class _OpeningPageState extends State<OpeningPage> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Row(
-          children: [
-            MyBox(darkGreen,height: 50),
-          ],
+        Padding(padding: EdgeInsets.only(top:45)),
+        MyBox(lightGreen, height: 100,
+          insideText: const Text('Sok volt a nyaralás...',
+          style: TextStyle(color:Colors.white,fontSize:35))
         ),
-        Row(
-          children: [
-            MyBox(lightGreen,),
-            MyBox(lightGreen),
-          ],
-        ),
-        MyBox(mediumGreen, text: backend.currentUser == null ? "" :
-                                '${backend.currentUser!.name}'),
-        Row(
-          children: [
-            MyBox(lightGreen, height: 200),
-            MyBox(lightGreen, height: 200),
-          ],
-        ),
+        MyBox(mediumGreen, height: 200,
+    insideText: Text(backend.currentUser == null ? "" :
+                                '${backend.currentUser!.name}')),
       ],
     );
   }
@@ -141,22 +128,19 @@ class MyPage1Widget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
+        Padding(padding: EdgeInsets.only(top:45)),
         Row(
           children: [
-            MyBox(darkGreen, height: 50),
+            MyBox(lightGreen, insideText: Text('IDEJE  \nVISSZATEKINTENI.',style: const TextStyle(color:Colors.white,fontSize:35)))
           ],
         ),
+        Image.asset("resources/images/rewind_icon.png"),
         Row(
           children: [
-            MyBox(lightGreen, text: 'Üdvözöljük! '),
-            MyBox(lightGreen),
-          ],
-        ),
-        MyBox(mediumGreen, text: 'Story 1'),
-        Row(
-          children: [
-            MyBox(lightGreen, height: 200),
-            MyBox(lightGreen, height: 200),
+            MyBox(lightGreen, height: 200,
+                insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva \n\n'
+                  'Visszajelzés a költési tendenciákról hasonló anyagi helyzetben lévő felhasználók körében. ',
+                  style: const TextStyle(color:Colors.white,fontSize:14, fontWeight:FontWeight.bold))),
           ],
         ),
       ],
@@ -167,9 +151,9 @@ class MyPage1Widget extends StatelessWidget {
 class MyBox extends StatelessWidget {
   final Color color;
   final double? height;
-  final String? text;
+  final Text? insideText;
 
-  const MyBox(this.color, {super.key, this.height, this.text});
+  const MyBox(this.color, {super.key, this.height, this.insideText});
 
   @override
   Widget build(BuildContext context) {
@@ -178,16 +162,10 @@ class MyBox extends StatelessWidget {
         margin: const EdgeInsets.all(10),
         color: color,
         height: (height == null) ? 150 : height,
-        child: (text == null)
+        child: (insideText == null)
             ? null
             : Center(
-          child: Text(
-            text!,
-            style: const TextStyle(
-              fontSize: 50,
-              color: Colors.white,
-            ),
-          ),
+          child: insideText,
         ),
       ),
     );
@@ -227,7 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
       isLogin = true;
     });
     backend.currentUser = await backend.getUserInfo(3);
-
+    print(backend.currentUser!.name);
     setState((){
       isLogin=false;
     });
@@ -235,6 +213,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    if(backend.currentUser == null)
+      {
+        login();
+      }
     return PageView(
       controller:_pageController,
       children: [
@@ -265,8 +247,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 5,bottom:0,right:0,top:0), //apply padding to all four sides
-                                child: const Text("KISS PÉTER",
-                                        style: TextStyle(color: Colors.white),
+                                child: Text(backend.currentUser == null ? "Kiss Péter" : '${backend.currentUser!.name}',
+                                        style: const TextStyle(color: Colors.white),
                                         )
                                 ),
                             ],
