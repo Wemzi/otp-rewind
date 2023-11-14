@@ -11,7 +11,7 @@ getUserInfo(int userId) async {
       headers: <String, String>{'authorization': basicAuth});
   print(r.statusCode);
  if(r.statusCode!=200){
-    data = jsonDecode('{"id":"1","name":"Kis János","country":"Hungary","birthdate":"1997-07-21"}');
+    data = jsonDecode('{"id":"1","name":"Kis János","country":"Hungary","birthdate":"1997-07-21","amount":"600.000Ft"}');
  }
  else{
    data = jsonDecode(r.body);
@@ -28,7 +28,8 @@ getUserInfo(int userId) async {
       data['id'] as int,
       data['name'] as String,
       data['country'] as String,
-      data['birthdate'] as String
+      data['birthdate'] as String,
+      data['Amount'] as String
   );
 }
 
@@ -38,9 +39,16 @@ class User {
   String? name;
   String? country;
   String? birthdate;
+  String? amount;
+  String? extendedData; // todo: figure out format and therefore proper type
 
   User(int this.id, String this.name, String this.country,
-      String this.birthdate);
+      String this.birthdate, String this.amount);
+
+  void loadExtendedData(String extendedData)
+  {
+    this.extendedData = extendedData;
+  }
 }
 
 User? currentUser;

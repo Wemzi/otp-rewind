@@ -8,7 +8,12 @@ void main() {
   runApp(const OTPRewind());
 }
 
-
+const ColorFilter greyscale = ColorFilter.matrix(<double>[
+  0.2126, 0.7152, 0.0722, 0, 0,
+  0.2126, 0.7152, 0.0722, 0, 0,
+  0.2126, 0.7152, 0.0722, 0, 0,
+  0,      0,      0,      1, 0,
+]);
 final lightGreen = Colors.green.shade300;
 final mediumGreen = Colors.green.shade600;
 final darkGreen = Colors.green.shade900;
@@ -159,6 +164,7 @@ class MainPage extends State<OTPAppPage> {
   final _pageController = PageController(initialPage: 0);
   final _controllerBackground = ScrollController();
   final _controllerText = ScrollController();
+  final _rewindIconImage = Image.asset("resources/images/rewind_icon_small_color.png", fit: BoxFit.cover);
 
   void scrollListener() {
     _controllerBackground.jumpTo(_controllerText.offset);
@@ -200,7 +206,11 @@ class MainPage extends State<OTPAppPage> {
   void rewindTapped()
   {
     print("Rewind tapped");
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
+    if(backend.currentUser!=null && backend.currentUser!.extendedData != null)
+      {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
+      }
+
   }
 
   String getMonogram(String name)
@@ -266,7 +276,10 @@ class MainPage extends State<OTPAppPage> {
                               child: Container(
                                 height: 20,
                                 width: 20,
-                                child: Image.asset("resources/images/rewind_icon_small_color.png", fit: BoxFit.cover), //TODO: grey if data not ready
+                                child: backend.currentUser == null || backend.currentUser?.extendedData == null ?
+                                ColorFiltered( colorFilter: greyscale,
+                                    child:_rewindIconImage ) :
+                                _rewindIconImage
                               ),
                             ),
                           ),
@@ -275,8 +288,8 @@ class MainPage extends State<OTPAppPage> {
                         Row(
                         children: [
                           Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.5,left:MediaQuery.of(context).size.width/10),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.name}',
-                                style: const TextStyle(color: colorOTPwhite),)  //TODO: real money value from db
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.amount}',
+                                style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
                       ),
