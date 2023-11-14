@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
 import "backend.dart" as backend;
+import 'dart:math' as math;
 
 void main() {
   runApp(const OTPRewind());
@@ -278,13 +280,23 @@ class MainPage extends State<OTPAppPage> {
                           ),
                         ],
                       ),
-                      Container(
-                        child:
-                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/2.46,),
-                              child: Text(backend.currentUser == null ? "500 000 Ft" : '${backend.currentUser!.name}',
-                              style: const TextStyle(color: colorOTPgreen, fontSize: 25), textAlign: TextAlign.center,)  //TODO: real spend value from db
+                        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.1,),
+                            child: Transform.rotate(angle: -math.pi / 1.2,
+                              child: CircularPercentIndicator(
+                                radius: 130,
+                                lineWidth: 12.0,
+                                percent:0.2, //todo max % current spent
+                                center: Transform.rotate(angle: math.pi / 1.2,
+                                        child: Padding(padding: const EdgeInsets.only(top:20),
+                                                child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.name}',
+                                                style: const TextStyle(color: colorOTPgreen, fontSize: 20),) //TODO: real money value from db)
+                                                ),
+                                ),
+                                circularStrokeCap: CircularStrokeCap.round,
+                                progressColor: colorOTPgreen,
+                                backgroundColor: Colors.transparent,
+                              ),)
                         ),
-                      ),
                     ],
                   ),
                 ),
