@@ -7,7 +7,7 @@
         "birthdate": "1997-07-21",
         "balance": 600000,
         "averageSpend":"393232",
-        "extendedData_Monthly":{
+        "extendedDataYearly":{
             "favouriteCountry":"Croatia",
             "visitedCountriesThisYear":7,
             "easiestMonth":5,
@@ -43,7 +43,8 @@
         "Groceries":88630,
         "Going_out":54715,
         "Transport":12204,
-        "HealthBeauty":48702
+        "HealthBeauty":48702,
+        "Home":30332
     },
     "vendors":{
         "Tesco":50032,
