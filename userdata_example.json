@@ -1,11 +1,11 @@
 {
 "currentUser":{
-        "id": "1",
+        "id": 1,
         "password": "sadsasadasasdfewr323423",
         "name": "Kis János",
         "country": "Hungary",
         "birthdate": "1997-07-21",
-        "balance": "600000",
+        "balance": 600000,
         "averageSpend":"393232",
         "extendedData_Monthly":{
             "favouriteCountry":"Croatia",
