@@ -225,7 +225,8 @@ class MainPage extends State<OTPAppPage> {
                 child: SingleChildScrollView(
                   controller: _controllerBackground,
                   scrollDirection: Axis.vertical,
-                  child: Image.asset("resources/images/main_blank.jpg"),
+                  child:
+                  Container(width:MediaQuery.of(context).size.width, child:Image.asset("resources/images/main_blank.jpg", fit:BoxFit.cover),)
                 ),
               ),
               SingleChildScrollView(
