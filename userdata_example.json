@@ -1,34 +1,37 @@
 {
 "currentUser":{
         "id": 1,
-        "password": "sadsasadasasdfewr323423",
         "name": "Kis János",
         "country": "Hungary",
         "birthdate": "1997-07-21",
         "balance": 600000,
-        "averageSpend":"393232",
+        "averageSpend":393232,
         "extendedDataYearly":{
             "favouriteCountry":"Croatia",
             "visitedCountriesThisYear":7,
             "easiestMonth":5,
             "hardestMonth":1,
             "favouriteVendor":"Lidl",
-            "spentOnCategories":{
-                "Clothing":147562,
-                "Groceries":88630,
-                "Going_out":54715,
-                "Transport":2204,
-                "HealthBeauty":48702
-            },
-            "spentInCountries":{
-                "Hungary":2421422,
-                "Croatia":100032,
-                "Germany":100032,
-                "Austria":100032,
-                "Georgia":100032,
-                "Turkey":100032,
-                "Denmark":100032
-            }
+            "topPercentages":[
+                {
+                    "name":"Lidl",
+                    "topPercentage":2,
+                    "amount":2332323,
+                    "type":"vendor"
+                },
+                {
+                    "name":"Croatia",
+                    "topPercentage":19,
+                    "amount":2332323,
+                    "type":"country"
+                },
+                {
+                    "name":"Clothes",
+                    "topPercentage":12,
+                    "amount":2332323,
+                    "type":"Category"
+                }
+            ]
         }
     },
 "averages":{
