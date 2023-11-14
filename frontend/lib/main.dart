@@ -186,6 +186,10 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     _controllerText.addListener(scrollListener);
+    if(backend.currentUser == null)
+    {
+      login();
+    }
   }
 
   @override
@@ -211,53 +215,85 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void rewindTapped()
+  {
+    print("Rewind tapped");
+  }
+
+  String getMonogram(String name)
+  {
+    String ret = "";
+    List<String> splitted = name.split(' ');
+    for(var i = 0; i < splitted.length; i++)
+    {
+      ret += splitted[i][0];
+    }
+    return ret;
+  }
+
   @override
   Widget build(BuildContext context) {
-    if(backend.currentUser == null)
-      {
-        login();
-      }
     return PageView(
       controller:_pageController,
       children: [
         Scaffold(
           body: Stack(
-          children: <Widget>
-              [Container(
+            children: <Widget>
+            [
+              Container(
                 child: SingleChildScrollView(
                   controller: _controllerBackground,
-                    scrollDirection: Axis.vertical,
-                    child: Image.asset("resources/images/main_blank.jpg"),
-                    ),
-                ),
-                SingleChildScrollView(
-                  controller: _controllerText,
                   scrollDirection: Axis.vertical,
-                  child: Container(
-                    width: MediaQuery. of(context). size. width,
-                    height: 5331,
-                    child: Column(
-                      children: <Widget> [
-                          const Row(
-                            children: [
-                              Padding(padding: EdgeInsets.all(27.0))
-                            ],
+                  child: Image.asset("resources/images/main_blank.jpg"),
+                ),
+              ),
+              SingleChildScrollView(
+                controller: _controllerText,
+                scrollDirection: Axis.vertical,
+                child: Container(
+                  //color: Colors.red,
+                  width: MediaQuery. of(context). size. width,
+                  height: 1700,
+                  child: Column(
+                    children: <Widget> [
+                      const Row(
+                        children: [
+                          Padding(padding: EdgeInsets.all(27.0))
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Padding(
+                              padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 11,bottom:0,right:0,top:0), //apply padding to all four sides
+                              child: Text(backend.currentUser == null ? "KP" : '${getMonogram(backend.currentUser!.name!)}',
+                                style: const TextStyle(color: Colors.white),
+                              )
                           ),
-                          Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 5,bottom:0,right:0,top:0), //apply padding to all four sides
-                                child: Text(backend.currentUser == null ? "Kiss Péter" : '${backend.currentUser!.name}',
-                                        style: const TextStyle(color: Colors.white),
-                                        )
-                                ),
-                            ],
-                          )
-                      ],
-                    ),
+                          Padding(
+                              padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 17,bottom:0,right:0,top:0), //apply padding to all four sides
+                              child: Text(backend.currentUser == null ? "Kiss Péter" : '${backend.currentUser!.name}',
+                                style: const TextStyle(color: Colors.white),
+                              )
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left:MediaQuery. of(context). size. width/ 2.5,bottom:0,right:0,top:0), //apply padding to all four sides
+                            child: GestureDetector(
+                              onTap: () {rewindTapped();},
+                              child: Container(
+                                height: 20,
+                                width: 20,
+                                child: Image.asset("resources/images/rewind_icon_small_color.png", fit: BoxFit.cover), //TODO: grey if data not ready
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
                   ),
                 ),
-              ],
+              ),
+              Align(alignment: FractionalOffset.bottomCenter , child:Image.asset("resources/images/hud_main.jpg")),
+            ],
           ),
         ),
         OpeningPage(),

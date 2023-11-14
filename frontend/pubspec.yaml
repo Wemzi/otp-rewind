@@ -63,6 +63,9 @@ flutter:
   assets:
       - resources/images/main_blank.jpg
       - resources/images/rewind_icon.png
+      - resources/images/rewind_icon_small_color.png
+      - resources/images/rewind_icon_small_grey.png
+      - resources/images/hud_main.jpg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
