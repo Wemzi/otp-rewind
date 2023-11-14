@@ -1,6 +1,5 @@
 {
-"users":[
-    {
+"currentUser":{
         "id": "1",
         "password": "sadsasadasasdfewr323423",
         "name": "Kis János",
@@ -31,8 +30,7 @@
                 "Denmark":100032
             }
         }
-    }
-],
+    },
 "averages":{
     "balance": 4342354,
     "averageSpend":344322,
