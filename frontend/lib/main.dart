@@ -3,11 +3,20 @@ import 'package:http/http.dart';
 import "backend.dart" as backend;
 
 void main() {
-  runApp(const MyApp());
+  runApp(const OTPRewind());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+
+final lightGreen = Colors.green.shade300;
+final mediumGreen = Colors.green.shade600;
+final darkGreen = Colors.green.shade900;
+const colorOTPgreen = Color.fromARGB(255, 106, 172, 69);
+const colorOTPgrey = Color.fromARGB(255, 167, 172, 184);
+const colorOTPwhite = Color.fromARGB(255, 250, 251, 252);
+const colorOTPdarkGrey = Color.fromARGB(255, 42, 43, 46);
+
+class OTPRewind extends StatelessWidget {
+  const OTPRewind({super.key});
 
   // This widget is the root of your application.
   @override
@@ -15,51 +24,25 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'OTP Rewind',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'OTP Rewind Demo'),
+      home: const OTPAppPage(title: 'OTP Rewind Demo'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class OTPAppPage extends StatefulWidget {
+  const OTPAppPage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<OTPAppPage> createState() => MainPage();
 }
 
-final lightGreen = Colors.green.shade300;
-final mediumGreen = Colors.green.shade600;
-final darkGreen = Colors.green.shade900;
-class OpeningPage extends StatefulWidget {
+/*class OpeningPage extends StatefulWidget {
 
   @override
   State<OpeningPage> createState() => _OpeningPageState();
@@ -93,7 +76,6 @@ class OpeningPage extends StatefulWidget {
 
 
 //Contains balance info, account holder name, OTP Rewind button.
-class _OpeningPageState extends State<OpeningPage> {
   final _pageController = PageController(initialPage: 0);
 
   @override
@@ -117,12 +99,10 @@ class _OpeningPageState extends State<OpeningPage> {
       ],
     );
   }
-}
+}*/
 
-
-
-class MyPage1Widget extends StatelessWidget {
-  const MyPage1Widget({super.key});
+class RewindStartupPage extends StatelessWidget {
+  const RewindStartupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +152,7 @@ class MyBox extends StatelessWidget {
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class MainPage extends State<OTPAppPage> {
   bool isLogin = false;
   final _pageController = PageController(initialPage: 0);
   final _controllerBackground = ScrollController();
@@ -218,6 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void rewindTapped()
   {
     print("Rewind tapped");
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
   }
 
   String getMonogram(String name)
@@ -252,31 +233,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 scrollDirection: Axis.vertical,
                 child: Container(
                   //color: Colors.red,
-                  width: MediaQuery. of(context). size. width,
+                  width: MediaQuery.of(context).size.width,
                   height: 1700,
                   child: Column(
                     children: <Widget> [
-                      const Row(
+                        Row(
                         children: [
-                          Padding(padding: EdgeInsets.all(27.0))
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/14.5,bottom:0,right:0,left:0))
                         ],
                       ),
                       Row(
                         children: [
                           Padding(
-                              padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 11,bottom:0,right:0,top:0), //apply padding to all four sides
-                              child: Text(backend.currentUser == null ? "KP" : '${getMonogram(backend.currentUser!.name!)}',
-                                style: const TextStyle(color: Colors.white),
+                              padding: EdgeInsets.only(left:MediaQuery.of(context).size.width / 11,bottom:0,right:0,top:0), //apply padding to all four sides
+                              child: Text(backend.currentUser == null ? "KP" : getMonogram(backend.currentUser!.name!),
+                                style: const TextStyle(color: colorOTPdarkGrey),
                               )
                           ),
                           Padding(
-                              padding: EdgeInsets.only(left:MediaQuery. of(context). size. width / 17,bottom:0,right:0,top:0), //apply padding to all four sides
+                              padding: EdgeInsets.only(left:MediaQuery.of(context).size.width / 17,bottom:0,right:0,top:0), //apply padding to all four sides
                               child: Text(backend.currentUser == null ? "Kiss Péter" : '${backend.currentUser!.name}',
-                                style: const TextStyle(color: Colors.white),
+                                style: const TextStyle(color: colorOTPwhite),
                               )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left:MediaQuery. of(context). size. width/ 2.5,bottom:0,right:0,top:0), //apply padding to all four sides
+                            padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.5,bottom:0,right:0,top:0), //apply padding to all four sides
                             child: GestureDetector(
                               onTap: () {rewindTapped();},
                               child: Container(
@@ -287,7 +268,22 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                         ],
-                      )
+                      ),
+                        Row(
+                        children: [
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.5,left:MediaQuery.of(context).size.width/10),
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.name}',
+                                style: const TextStyle(color: colorOTPwhite),)  //TODO: real money value from db
+                          ),
+                        ],
+                      ),
+                      Container(
+                        child:
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/2.46,),
+                              child: Text(backend.currentUser == null ? "500 000 Ft" : '${backend.currentUser!.name}',
+                              style: const TextStyle(color: colorOTPgreen, fontSize: 25), textAlign: TextAlign.center,)  //TODO: real spend value from db
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -295,9 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Align(alignment: FractionalOffset.bottomCenter , child:Image.asset("resources/images/hud_main.jpg")),
             ],
           ),
-        ),
-        OpeningPage(),
-        const MyPage1Widget(),
+        )
       ],
     );
   }
