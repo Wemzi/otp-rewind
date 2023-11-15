@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import User
 from .serializers import UserSerializer
+from .userData import GetUserData
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     serializer_class = UserSerializer
@@ -44,13 +45,16 @@ class UserApiView(APIView):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer = UserSerializer(user_instance)
-        response = serializer.data
-        response["amount"] = 3000000
-        response["currency"] = "HUF"
-        print(response)
+        user = {
+                "id": user_instance.id,
+                "name": user_instance.name,
+                "country": user_instance.country,
+                "birthdate": user_instance.birthdate,
+                "balance": user_instance.balance,
+                }
+        response = GetUserData(user)
+        return Response({"currentUser": response}, status=status.HTTP_200_OK)
 
-        return Response(response, status=status.HTTP_200_OK)
 
     # 4. Update
     def put(self, request, user_id, *args, **kwargs):
