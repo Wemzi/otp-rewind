@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import "backend.dart" as backend;
 import 'dart:math' as math;
@@ -111,26 +110,51 @@ class OTPAppPage extends StatefulWidget {
 class RewindStartupPage extends StatelessWidget {
   const RewindStartupPage({super.key});
 
+  //TODO design
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top:45)),
-        Row(
-          children: [
-            MyBox(lightGreen, insideText: Text('IDEJE  \nVISSZATEKINTENI.',style: const TextStyle(color:Colors.white,fontSize:35)))
+
+    return Container( color: colorOTPdarkGrey,
+        child:Column(
+          children: <Widget>[
+            const Padding(padding: EdgeInsets.only(top:45)),
+            const Row(
+              children: [
+                MyBox(colorOTPgreen, insideText: Text('IDEJE  \nVISSZATEKINTENI.',style: TextStyle(color:Colors.white,fontSize:35))) // TODO Mybox would look cooler if it had rounded edges
+              ],
+            ),
+             Row(children:  <Widget>[
+              const Padding(padding: EdgeInsets.only(left:50)),
+              Expanded(child:Image.asset("resources/images/rewind_icon.png",fit:BoxFit.fill)),
+              const Padding(padding: EdgeInsets.only(right:50))
+            ]),
+            const Row(
+              children: [
+                MyBox(colorOTPgreen,
+                    insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva \n\n'
+                      'Visszajelzés a költési tendenciákról hasonló anyagi helyzetben lévő felhasználók körében. ',
+                      style: TextStyle(color:Colors.white,fontSize:14, fontWeight:FontWeight.bold))),
+              ],
+            ),
+            TextButton(
+              style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
+              overlayColor: MaterialStateProperty.resolveWith<Color?>(
+              (Set<MaterialState> states) {
+              if (states.contains(MaterialState.hovered))
+              return Colors.greenAccent.withOpacity(0.04);
+              if (states.contains(MaterialState.focused) ||
+              states.contains(MaterialState.pressed))
+              return Colors.greenAccent.withOpacity(0.12);
+              return null; // Defer to the widget's default.
+              },
+              ),
+              ),
+              onPressed: () { }, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
+              child: const Text('Kezdjünk bele!')
+            )
           ],
-        ),
-        Image.asset("resources/images/rewind_icon.png"),
-        Row(
-          children: [
-            MyBox(lightGreen, height: 200,
-                insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva \n\n'
-                  'Visszajelzés a költési tendenciákról hasonló anyagi helyzetben lévő felhasználók körében. ',
-                  style: const TextStyle(color:Colors.white,fontSize:14, fontWeight:FontWeight.bold))),
-          ],
-        ),
-      ],
+      )
     );
   }
 }
@@ -176,6 +200,7 @@ class MainPage extends State<OTPAppPage> {
     _controllerText.addListener(scrollListener);
     if(backend.currentUser == null)
     {
+      print("logging in...");
       login();
     }
   }
@@ -197,7 +222,7 @@ class MainPage extends State<OTPAppPage> {
       isLogin = true;
     });
     backend.currentUser = await backend.getUserInfo(3);
-    print(backend.currentUser!.name);
+    print(backend.currentUser?.name);
     setState((){
       isLogin=false;
     });
@@ -206,7 +231,7 @@ class MainPage extends State<OTPAppPage> {
   void rewindTapped()
   {
     print("Rewind tapped");
-    if(backend.currentUser!=null && backend.currentUser!.extendedData != null)
+    if(backend.currentUser!=null ) // TODO && backend.currentUser?.extendedData != null)
       {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
       }
@@ -230,6 +255,7 @@ class MainPage extends State<OTPAppPage> {
       controller:_pageController,
       children: [
         Scaffold(
+          backgroundColor: colorOTPdarkGrey,
           body: Stack(
             children: <Widget>
             [
@@ -238,13 +264,13 @@ class MainPage extends State<OTPAppPage> {
                   controller: _controllerBackground,
                   scrollDirection: Axis.vertical,
                   child:
-                  Container(width:MediaQuery.of(context).size.width, child:Image.asset("resources/images/main_blank.jpg", fit:BoxFit.cover),)
+                  SizedBox(width:MediaQuery.of(context).size.width, child:Image.asset("resources/images/main_blank.jpg", fit:BoxFit.cover),)
                 ),
               ),
               SingleChildScrollView(
                 controller: _controllerText,
                 scrollDirection: Axis.vertical,
-                child: Container(
+                child: SizedBox(
                   //color: Colors.red,
                   width: MediaQuery.of(context).size.width,
                   height: 1700,
@@ -273,11 +299,11 @@ class MainPage extends State<OTPAppPage> {
                             padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.5,bottom:0,right:0,top:0), //apply padding to all four sides
                             child: GestureDetector(
                               onTap: () {rewindTapped();},
-                              child: Container(
+                              child: SizedBox(
                                 height: 20,
                                 width: 20,
-                                child: backend.currentUser == null || backend.currentUser?.extendedData == null ?
-                                ColorFiltered( colorFilter: greyscale,
+                                child: backend.currentUser == null // TODO  backend.currentUser?.extendedData == null
+                                ? ColorFiltered( colorFilter: greyscale,
                                     child:_rewindIconImage ) :
                                 _rewindIconImage
                               ),
@@ -288,13 +314,15 @@ class MainPage extends State<OTPAppPage> {
                         Row(
                         children: [
                           Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.5,left:MediaQuery.of(context).size.width/10),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.amount}',
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance}',
                                 style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
                       ),
                         Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.1,),
                             child: Transform.rotate(angle: -math.pi / 1.2,
+                              //TODO: set Android model to Galaxy S20 Plus (or same aspect ratio), and adjust element to match with bg image
+                              //TODO: best if it works with iPhone and Android as well
                               child: CircularPercentIndicator(
                                 radius: 130,
                                 lineWidth: 12.0,
