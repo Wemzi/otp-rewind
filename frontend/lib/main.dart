@@ -21,6 +21,31 @@ const colorOTPgrey = Color.fromARGB(255, 167, 172, 184);
 const colorOTPwhite = Color.fromARGB(255, 250, 251, 252);
 const colorOTPdarkGrey = Color.fromARGB(255, 42, 43, 46);
 
+class MyBox extends StatelessWidget {
+  final Color color;
+  final double? height;
+  final Text? insideText;
+
+  const MyBox(this.color, {super.key, this.height, this.insideText});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.all(10),
+        color: color,
+        height: (height == null) ? 150 : height,
+        child: (insideText == null)
+            ? null
+            : Center(
+          child: insideText,
+        ),
+      ),
+    );
+  }
+}
+
+
 class OTPRewind extends StatelessWidget {
   const OTPRewind({super.key});
 
@@ -48,40 +73,8 @@ class OTPAppPage extends StatefulWidget {
   State<OTPAppPage> createState() => MainPage();
 }
 
-/*class OpeningPage extends StatefulWidget {
 
-  @override
-  State<OpeningPage> createState() => _OpeningPageState();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: [
-            MyBox(darkGreen,height: 50),
-          ],
-        ),
-        Row(
-          children: [
-            MyBox(lightGreen),
-            MyBox(lightGreen),
-          ],
-        ),
-        MyBox(mediumGreen, insideText: Text(backend.currentUser == null ? "" : '${backend.currentUser!.name}', style:const TextStyle(color: Colors.white,fontSize:30))),
-        Row(
-          children: [
-            MyBox(lightGreen, height: 200),
-            MyBox(lightGreen, height: 200),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-
-//Contains balance info, account holder name, OTP Rewind button.
+/*
   final _pageController = PageController(initialPage: 0);
 
   @override
@@ -105,7 +98,8 @@ class OTPAppPage extends StatefulWidget {
       ],
     );
   }
-}*/
+}
+*/
 
 class RewindStartupPage extends StatelessWidget {
   const RewindStartupPage({super.key});
@@ -131,7 +125,7 @@ class RewindStartupPage extends StatelessWidget {
             const Row(
               children: [
                 MyBox(colorOTPgreen,
-                    insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva \n\n'
+                    insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva. \n\n'
                       'Visszajelzés a költési tendenciákról hasonló anyagi helyzetben lévő felhasználók körében. ',
                       style: TextStyle(color:Colors.white,fontSize:14, fontWeight:FontWeight.bold))),
               ],
@@ -141,16 +135,18 @@ class RewindStartupPage extends StatelessWidget {
               foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
               overlayColor: MaterialStateProperty.resolveWith<Color?>(
               (Set<MaterialState> states) {
-              if (states.contains(MaterialState.hovered))
-              return Colors.greenAccent.withOpacity(0.04);
+              if (states.contains(MaterialState.hovered)) {
+                return colorOTPgreen.withOpacity(0.04);
+              }
               if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed))
-              return Colors.greenAccent.withOpacity(0.12);
+              states.contains(MaterialState.pressed)) {
+                return Colors.greenAccent.withOpacity(0.12);
+              }
               return null; // Defer to the widget's default.
               },
               ),
               ),
-              onPressed: () { }, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
+              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const StoryContainer()));}, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
               child: const Text('Kezdjünk bele!')
             )
           ],
@@ -159,26 +155,35 @@ class RewindStartupPage extends StatelessWidget {
   }
 }
 
-class MyBox extends StatelessWidget {
-  final Color color;
-  final double? height;
-  final Text? insideText;
-
-  const MyBox(this.color, {super.key, this.height, this.insideText});
+class StoryContainer extends StatelessWidget {
+  const StoryContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        color: color,
-        height: (height == null) ? 150 : height,
-        child: (insideText == null)
-            ? null
-            : Center(
-          child: insideText,
-        ),
-      ),
+    return Container(
+        color: colorOTPdarkGrey,
+        child:Column(
+        children: <Widget>[
+          Row(
+            children: [
+              MyBox(colorOTPgreen,height: 50),
+            ],
+          ),
+          Row(
+            children: [
+              MyBox(lightGreen),
+              MyBox(lightGreen),
+            ],
+          ),
+          MyBox(colorOTPgreen, insideText: Text(backend.currentUser == null ? "" : '${backend.currentUser!.name}', style:const TextStyle(color: Colors.white,fontSize:30))),
+          Row(
+            children: [
+              MyBox(lightGreen, height: 200),
+              MyBox(lightGreen, height: 200),
+            ],
+          ),
+        ],
+        )
     );
   }
 }
