@@ -326,7 +326,7 @@ class MainPage extends State<OTPAppPage> {
                       ),
                         Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.1,),
                             child: Transform.rotate(angle: -math.pi / 1.2,
-                              //TODO: set Android model to Galaxy S20 Plus (or same aspect ratio), and adjust element to match with bg image
+                              //TODO: set Android model to Galaxy S20 Plus (or same aspect ratio), and adjust element to match with bg image (aspect ratio 20:9)
                               //TODO: best if it works with iPhone and Android as well
                               child: CircularPercentIndicator(
                                 radius: 130,
