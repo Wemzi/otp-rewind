@@ -25,6 +25,7 @@ const colorOTPwhite = Color.fromARGB(255, 250, 251, 252);
 const colorOTPdarkGrey = Color.fromARGB(255, 42, 43, 46);
 const colorOTPdarkGreen = Color.fromARGB(255, 43, 101, 78);
 const colorOTPMidGrey = Color.fromARGB(255, 54, 56, 60);
+bool firstTime = true;
 
 class MyBox extends StatelessWidget {
   final Color color;
@@ -327,13 +328,20 @@ class MainPage extends State<OTPAppPage> {
       isLogin=false;
     });
   }
-
+  
+  Story getUser()
+  {
+    return Story(user: backend.currentUser!, duration: const Duration(seconds: 7));
+  }
+  
   void rewindTapped()
   {
     print("Rewind tapped");
-    if(backend.currentUser!=null)
+    if(backend.currentUser!=null && firstTime)
     {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
+    }else if (backend.currentUser!=null){
+      Navigator.push(context, MaterialPageRoute(builder: (context) => StoryScreen(story: getUser())));
     }
 
   }

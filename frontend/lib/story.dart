@@ -132,7 +132,21 @@ class StoryBox extends StatelessWidget{
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [color1,color2]
+            ),
+            boxShadow: [
+              BoxShadow(
+              color: colorOTPgrey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, -2), // changes position of shadow
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              spreadRadius: 2,
+              blurRadius: 10,
+              offset: const Offset(0, 2), // changes position of shadow
             )
+            ]
           ),
           child: child,
         )
@@ -180,8 +194,7 @@ class _StoryScreenState extends State<StoryScreen>
             _currentIndex += 1;
             _loadStory(story: widget.story._content[_currentIndex]);
           }else{
-            //last story rn a loop after -> details page
-            _loadStory(story: widget.story._content[_currentIndex]);
+            Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
           }
         });
       }
@@ -277,6 +290,20 @@ class _StoryScreenState extends State<StoryScreen>
       backgroundColor: colorOTPdarkGrey,
       body: GestureDetector(
         onTapDown: (details) => _onTapDown(details,cont),
+        onHorizontalDragUpdate: (details) {
+            int sensitivity = 8;
+            if (details.delta.dx > sensitivity) {
+              if(firstTime)
+              {
+                firstTime = false;
+                Navigator.pop(context); Navigator.pop(context);
+              }else{
+                Navigator.pop(context);
+              }
+            } else if(details.delta.dx < -sensitivity){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+            }
+          },
         child: Stack(
           children: <Widget> [
             PageView.builder(

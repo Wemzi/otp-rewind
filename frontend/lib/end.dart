@@ -19,7 +19,15 @@ class EndScreen extends StatelessWidget{
         centerTitle: true,
         backgroundColor: colorOTPdarkGrey,
         leading: Padding(padding: const EdgeInsets.all(7.5), child: ElevatedButton(
-            onPressed: () { Navigator.pop(context); Navigator.pop(context); Navigator.pop(context); },
+            onPressed: () {
+              if(firstTime)
+                {
+                  firstTime=false; Navigator.pop(context); Navigator.pop(context); Navigator.pop(context);
+                }
+                else{
+                Navigator.pop(context); Navigator.pop(context);
+              }
+              },
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
               padding: const EdgeInsets.all(5),
