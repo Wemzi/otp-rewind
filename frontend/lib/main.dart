@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:otp_rewind/end.dart';
 import 'package:otp_rewind/story.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import "backend.dart" as backend;
@@ -331,9 +332,9 @@ class MainPage extends State<OTPAppPage> {
   {
     print("Rewind tapped");
     if(backend.currentUser!=null)
-      {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
-      }
+    {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
+    }
 
   }
 
