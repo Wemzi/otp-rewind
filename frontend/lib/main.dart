@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:otp_rewind/story.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import "backend.dart" as backend;
 import 'dart:math' as math;
@@ -105,71 +106,148 @@ class OTPAppPage extends StatefulWidget {
 class RewindStartupPage extends StatelessWidget {
   const RewindStartupPage({super.key});
 
+  Story getUser()
+  {
+    return Story(user: backend.currentUser!, duration: const Duration(seconds: 7));
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    return Container(
-        color: colorOTPdarkGrey,
-        child:Column(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/20,bottom:0,right:MediaQuery.of(context).size.width/1.18),
-              child: TextButton(
-                  onPressed: () {Navigator.pop(context);},
-                  child: const Text('X',style: TextStyle(color:colorOTPwhite, fontSize: 18),)
+      return Container(
+          color: colorOTPdarkGrey,
+          child: Column(
+            children: <Widget>[
+              Padding(padding: EdgeInsets.only(top: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 20, bottom: 0, right: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 1.18),
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text('X',
+                      style: TextStyle(color: colorOTPwhite, fontSize: 18),)
+                ),
               ),
-            ),
-            MyBox(colorOTPwhite, MediaQuery.of(context).size.height/1.8, 20,
+              MyBox(colorOTPwhite, MediaQuery
+                  .of(context)
+                  .size
+                  .height / 1.8, 20,
                 Column(
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
-                  const Text("IDEJE \nVISSZATEKINETNI", style: TextStyle(color:colorOTPdarkGreen,fontSize: 32,fontStyle: FontStyle.normal, decoration: TextDecoration.none)),
-                  Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
-                  SizedBox(
-                      height: MediaQuery.of(context).size.height/3,
-                      width: MediaQuery.of(context).size.height/3,
-                    child: Image.asset('resources/images/rewind_icon.png', fit:BoxFit.cover),
-                  )
-                ]
+                    children: <Widget>[
+                      Padding(padding: EdgeInsets.only(top: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 40)),
+                      const Text("IDEJE \nVISSZATEKINETNI", style: TextStyle(
+                          color: colorOTPdarkGreen,
+                          fontSize: 32,
+                          fontStyle: FontStyle.normal,
+                          decoration: TextDecoration.none)),
+                      Padding(padding: EdgeInsets.only(top: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 40)),
+                      SizedBox(
+                        height: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 3,
+                        width: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 3,
+                        child: Image.asset('resources/images/rewind_icon.png',
+                            fit: BoxFit.cover),
+                      )
+                    ]
+                ),
               ),
-            ),
-            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40),
-                child:MyBox(colorOTPMidGrey, MediaQuery.of(context).size.height/5, 50,
+              Padding(padding: EdgeInsets.only(top: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 40),
+                child: MyBox(colorOTPMidGrey, MediaQuery
+                    .of(context)
+                    .size
+                    .height / 5, 50,
                   Column(
                       children: <Widget>[
-                        Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
+                        Padding(padding: EdgeInsets.only(top: MediaQuery
+                            .of(context)
+                            .size
+                            .height / 40)),
                         Container(
-                          height: MediaQuery.of(context).size.height/15,
-                          child:Row(
-                            children: <Widget> [
-                              Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/10),
-                                  child:SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: Image.asset('resources/images/stat_icon_small.png',fit: BoxFit.cover,),
-                                    ),
-                                  ),
-                              Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/20),
-                                child:const Text("Visszatekintés az elmúlt hónap kiadásaira, \nmás felhasználók adataihoz viszonyítva", style:
-                                TextStyle(color: colorOTPgrey, fontSize: 10, fontWeight: FontWeight.bold, decoration: TextDecoration.none))
-                              )
-                            ],
-                          )
-                        ),
-                        Container(
-                            height: MediaQuery.of(context).size.height/15,
-                            child:Row(
-                              children: <Widget> [
-                                Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/10),
-                                  child:SizedBox(
-                                    height: 30,
-                                    width: 30,
-                                    child: Image.asset('resources/images/conv_icon_small.png',fit: BoxFit.fitWidth,),
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 15,
+                            child: Row(
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.only(
+                                    left: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 10),
+                                  child: SizedBox(
+                                    height: 20,
+                                    width: 20,
+                                    child: Image.asset(
+                                      'resources/images/stat_icon_small.png',
+                                      fit: BoxFit.cover,),
                                   ),
                                 ),
-                                Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/40),
-                                    child:const Text("Visszajelzés a költési tendenciákról hasonló\nanyagi helyzetben lévő felhasználók körében", style:
-                                    TextStyle(color: colorOTPgrey, fontSize: 10, fontWeight: FontWeight.bold, decoration: TextDecoration.none))
+                                Padding(padding: EdgeInsets.only(
+                                    left: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 20),
+                                    child: const Text(
+                                        "Visszatekintés az elmúlt hónap kiadásaira, \nmás felhasználók adataihoz viszonyítva",
+                                        style:
+                                        TextStyle(color: colorOTPgrey,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.none))
+                                )
+                              ],
+                            )
+                        ),
+                        Container(
+                            height: MediaQuery
+                                .of(context)
+                                .size
+                                .height / 15,
+                            child: Row(
+                              children: <Widget>[
+                                Padding(padding: EdgeInsets.only(
+                                    left: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 10),
+                                  child: SizedBox(
+                                    height: 30,
+                                    width: 30,
+                                    child: Image.asset(
+                                      'resources/images/conv_icon_small.png',
+                                      fit: BoxFit.fitWidth,),
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.only(
+                                    left: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .width / 40),
+                                    child: const Text(
+                                        "Visszajelzés a költési tendenciákról hasonló\nanyagi helyzetben lévő felhasználók körében",
+                                        style:
+                                        TextStyle(color: colorOTPgrey,
+                                            fontSize: 10,
+                                            fontWeight: FontWeight.bold,
+                                            decoration: TextDecoration.none))
                                 )
                               ],
                             )
@@ -177,36 +255,31 @@ class RewindStartupPage extends StatelessWidget {
                       ]
                   ),
                 ),
-            ),
-            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40),
-            child:
-              MyBox(colorOTPwhite, MediaQuery.of(context).size.height/15, 100,
-                TextButton(
-                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const StoryContainer()));}, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
-                      child: const Text('KEZDJÜK!',style: TextStyle(color: colorOTPdarkGrey, fontSize: 20),)
+              ),
+              Padding(padding: EdgeInsets.only(top: MediaQuery
+                  .of(context)
+                  .size
+                  .height / 40),
+                  child:
+                  MyBox(colorOTPwhite, MediaQuery
+                      .of(context)
+                      .size
+                      .height / 15, 100,
+                      TextButton(
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) =>
+                                    StoryScreen(story: getUser())));
+                          },
+                          child: const Text('KEZDJÜK!', style: TextStyle(
+                              color: colorOTPdarkGrey, fontSize: 20),)
+                      )
+                  )
               )
-              )
-            )
-          ],
-      )
-    );
-  }
-}
-
-class StoryContainer extends StatelessWidget {
-  const StoryContainer({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        color: colorOTPdarkGrey,
-        child:Column(
-        children: <Widget>[
-          //TODO STORY CLASS
             ],
-          ),
-        );
-  }
+          )
+      );
+    }
 }
 
 class MainPage extends State<OTPAppPage> {
@@ -257,7 +330,7 @@ class MainPage extends State<OTPAppPage> {
   void rewindTapped()
   {
     print("Rewind tapped");
-    if(backend.currentUser!=null ) // TODO && backend.currentUser?.extendedData != null)
+    if(backend.currentUser!=null)
       {
         Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
       }
@@ -350,11 +423,11 @@ class MainPage extends State<OTPAppPage> {
                               child: CircularPercentIndicator(
                                 radius: 130,
                                 lineWidth: 15.0,
-                                percent: backend.currentUser!.avgSpend! == 600000 ? 0.4 : backend.currentUser!.avgSpend! < 600000 ? backend.currentUser!.avgSpend! / 600000 : 0.4 - backend.currentUser!.avgSpend! / 600000, //todo max % current spent
+                                percent: backend.currentUser == null ? 0.4 : backend.currentUser!.avgSpend! > 600000 ? 0.6 : 0.3,
                                 center: Transform.rotate(angle: math.pi / 1.2,
                                         child: Padding(padding: const EdgeInsets.only(top:20),
-                                                child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
-                                                style: const TextStyle(color: colorOTPgreen, fontSize: 20),) //TODO: real money value from db)
+                                                child: Text(backend.currentUser == null ? "600 000 Ft" : "600 000 Ft",
+                                                style: const TextStyle(color: colorOTPgreen, fontSize: 20),)
                                                 ),
                                 ),
                                 circularStrokeCap: CircularStrokeCap.round,
