@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:otp_rewind/main.dart';
 import "backend.dart" as backend;
+import 'end.dart';
 
 
 extension ColorBrightness on Color {
@@ -332,8 +333,7 @@ class _StoryScreenState extends State<StoryScreen>
           _currentIndex += 1;
           _loadStory(story: widget.story._content[_currentIndex]);
         } else {
-          //TODO: open up the details page
-          _loadStory(story: widget.story._content[_currentIndex]);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
         }
       });
     }
