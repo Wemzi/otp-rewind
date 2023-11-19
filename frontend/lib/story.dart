@@ -1,9 +1,31 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
+import 'dart:math' as math;
 import 'package:otp_rewind/main.dart';
 import "backend.dart" as backend;
+
+
+extension ColorBrightness on Color {
+  Color darken([double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(this);
+    final hslDark = hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0));
+
+    return hslDark.toColor();
+  }
+
+  Color lighten([double amount = .1]) {
+    assert(amount >= 0 && amount <= 1);
+
+    final hsl = HSLColor.fromColor(this);
+    final hslLight =
+    hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0));
+
+    return hslLight.toColor();
+  }
+}
 
 enum Type{
   VENDOR,
@@ -28,6 +50,25 @@ class Content{
     required this.type,
   });
 
+  void updateContentTexts()
+  {
+    switch(type){
+      case Type.VENDOR:
+        _informationText = "KEDVENC KERESKEDŐ\n$name";
+        _informationPlusInfo = '"Ebben a hónapban kimagaslóan sokat jártál kedvenc élelmiszerüzletláncodba. Ez 120%-al nagyobb költés mint előző hónapban."'; //TODO AI??
+        _statText = "Legmagasabb ${percentage}%";
+        case Type.CATEGORY:
+        _informationText = "KEDVENC KATEGÓRIA\n$name";
+        _informationPlusInfo = "IDE GENERÁLUNK AI-VAL IDE GENERÁLUNK AI-VAL SZÖVEGET MAJD SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
+        _statText = "Legmagasabb ${percentage}%";
+        case Type.COUNTRY:
+        _informationText = "KEDVENC ORSZÁG\n$name";
+        _informationPlusInfo = "IDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
+        _statText = "Legmagasabb ${percentage}%";
+        default:
+        break;
+    }
+  }
 
 }
 
@@ -60,11 +101,46 @@ class Story{
   {
     _content = [];
     for(var element in user.data!.json['currentUser']['extendedDataYearly']['topFacts']){
-      _content.add(Content(name: element['name'], percentage: element['topPercentage'], amount: element['amount'], type: getType(element['type'])));
+      var content = Content(name: element['name'], percentage: element['topPercentage'], amount: element['amount'], type: getType(element['type']));
+      content.updateContentTexts();
+      _content.add(content);
     }
   }
 }
 
+
+class StoryBox extends StatelessWidget{
+  final Color color1;
+  final Color color2;
+  final double height;
+  final double radius;
+  final Widget child;
+  double? width = 150;
+
+  StoryBox({this.width, super.key, required this.radius,required this.height, required this.color1,required this.color2,required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(radius!),
+        child: Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [color1,color2]
+            )
+          ),
+          child: child,
+        )
+    );
+  }
+
+
+
+}
 
 
 class StoryScreen extends StatefulWidget{
@@ -110,7 +186,83 @@ class _StoryScreenState extends State<StoryScreen>
       }
     });
   }
-
+  Widget _createPageContent(Content cont)
+  {
+    Color colorTheme1 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    Color colorTheme2 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    return Container(
+      color: colorOTPdarkGrey,
+      child: Column(
+        children: <Widget>[
+            Padding(padding: const EdgeInsets.only(top:60),
+                  child:SizedBox(width: 100, height: 100, child: Image.asset("resources/images/rewind_icon.png", fit: BoxFit.cover))
+            ),
+            Padding(padding: const EdgeInsets.only(top:20),
+              child: StoryBox(width: MediaQuery.of(context).size.width/1.1 ,radius: 80, height: MediaQuery.of(context).size.height/2, color1: colorTheme1, color2: colorTheme2,
+                  child: Column(
+                    children: <Widget>[
+                      ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            color: colorOTPdarkGrey,
+                            height: 50,
+                            width: MediaQuery.of(context).size.width/3,
+                            child: const Center(child:Text("Információ", style: TextStyle(color: colorOTPgrey, fontSize: 20),)),
+                          )
+                        ),
+                      Padding(padding: const EdgeInsets.only(top: 30),
+                          child: StoryBox(width: MediaQuery.of(context).size.width/1.6, radius: 50, color1: colorTheme1.darken(0.1), color2: colorTheme2.darken(0.1), height: 125,
+                                  child: Center(child:Text(cont._informationPlusInfo!, style: const TextStyle(color: colorOTPwhite,fontSize: 12, fontWeight: FontWeight.bold)))
+                          ),
+                      ),
+                        Padding(padding: const EdgeInsets.only(top: 30),
+                          child: SizedBox(
+                            child: Text(cont._informationText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+                          )
+                      ),
+                    ],
+                  )),
+            ),
+          Padding(padding: EdgeInsets.only(top:  MediaQuery.of(context).size.height/30),
+              child: StoryBox(width: MediaQuery.of(context).size.width/1.1 ,radius: 40, height: MediaQuery.of(context).size.height/6, color1: colorTheme1, color2: colorTheme2,
+                child:Column(
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(color: colorOTPdarkGrey,
+                        height: 50,
+                        width: MediaQuery.of(context).size.width/3,
+                          child: const Center(child:Text("Statisztika", style: TextStyle(color: colorOTPgrey, fontSize: 20),)),
+                      )
+                    ),
+                      Padding(padding: const EdgeInsets.only(top: 10),
+                          child: SizedBox(
+                            child: Text(cont._statText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+                          )
+                      ),
+                   ]
+                )
+          )
+          ),
+          Padding(padding: EdgeInsets.only(top:  1),
+              child: Center(
+                child:
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20),
+                    child: FloatingActionButton(
+                        onPressed: () => {}, //TODO SHARE
+                        backgroundColor: colorOTPdarkGrey,
+                        foregroundColor: colorOTPgreen,
+                        child: const Icon(Icons.share),
+                    ),
+                  ),
+              )
+          )
+        ],
+      )
+    );
+  }
+  
   @override
   void dispose() {
     _animationController.dispose();
@@ -132,11 +284,7 @@ class _StoryScreenState extends State<StoryScreen>
               itemBuilder: (context, i) {
                 widget.story.getStoryContent();
                 final Content cont = widget.story._content[i];
-                //TODO REAL CONTENT, RN ITS A PALCEHOLDER
-                return Container(
-                  color: colorOTPdarkGrey,
-                  child: MyBox(colorOTPgreen,100,20,Text(cont.name))
-                );
+                return _createPageContent(cont);
               }
           ),
             Positioned(
@@ -167,10 +315,15 @@ class _StoryScreenState extends State<StoryScreen>
           _loadStory(story: widget.story._content[_currentIndex]);
         }
         else{
+          if(firstTime){
+            firstTime=false;
             var count = 0;
             Navigator.popUntil(context, (route) {
               return count++ == 2;
             });
+            }else{
+            Navigator.pop(context);
+          }
         }
       });
     }else if(dx > 2 * screenWidth / 3 ) {
@@ -215,7 +368,7 @@ class AnimatedBar extends StatelessWidget{
   Widget build(BuildContext context) {
     return Flexible(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 1.5),
+          padding: const EdgeInsets.only(top: 10,right: 5.5),
           child: LayoutBuilder(
             builder: (context, constraints){
               return Stack(
