@@ -30,7 +30,8 @@ getUserInfo(int userId) async {
       data['name'] as String,
       data['country'] as String,
       data['birthdate'] as String,
-      data['balance'] as int
+      data['balance'] as int,
+      data['averageSpend'] as int
   );
  print(retVal.name);
  retVal.loadExtendedData(extendedData);
@@ -43,10 +44,11 @@ class User {
   String? country;
   String? birthdate;
   int? balance;
+  int? avgSpend;
   ExtendedData? extendedData;
 
   User(int this.id, String this.name, String this.country,
-      String this.birthdate, int this.balance);
+      String this.birthdate, int this.balance, int this.avgSpend);
 
   void loadExtendedData(Map<String,dynamic> extendedData)
   {

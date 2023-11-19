@@ -13,6 +13,7 @@ const ColorFilter greyscale = ColorFilter.matrix(<double>[
   0.2126, 0.7152, 0.0722, 0, 0,
   0,      0,      0,      1, 0,
 ]);
+
 final lightGreen = Colors.green.shade300;
 final mediumGreen = Colors.green.shade600;
 final darkGreen = Colors.green.shade900;
@@ -20,28 +21,28 @@ const colorOTPgreen = Color.fromARGB(255, 106, 172, 69);
 const colorOTPgrey = Color.fromARGB(255, 167, 172, 184);
 const colorOTPwhite = Color.fromARGB(255, 250, 251, 252);
 const colorOTPdarkGrey = Color.fromARGB(255, 42, 43, 46);
+const colorOTPdarkGreen = Color.fromARGB(255, 43, 101, 78);
+const colorOTPMidGrey = Color.fromARGB(255, 54, 56, 60);
 
 class MyBox extends StatelessWidget {
   final Color color;
   final double? height;
-  final Text? insideText;
+  final Widget? inside;
+  final double? radius;
 
-  const MyBox(this.color, {super.key, this.height, this.insideText});
+  const MyBox(this.color, this.height, this.radius, this.inside, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        color: color,
-        height: (height == null) ? 150 : height,
-        child: (insideText == null)
-            ? null
-            : Center(
-          child: insideText,
-        ),
-      ),
-    );
+      return ClipRRect(
+          borderRadius: BorderRadius.circular(radius!),
+          child: Container(
+              height: height,
+              width: MediaQuery.of(context).size.width/1.1,
+              color: color,
+              child: inside,
+          )
+      );
   }
 }
 
@@ -104,50 +105,87 @@ class OTPAppPage extends StatefulWidget {
 class RewindStartupPage extends StatelessWidget {
   const RewindStartupPage({super.key});
 
-  //TODO design
+
   @override
   Widget build(BuildContext context) {
 
-    return Container( color: colorOTPdarkGrey,
+    return Container(
+        color: colorOTPdarkGrey,
         child:Column(
           children: <Widget>[
-            const Padding(padding: EdgeInsets.only(top:45)),
-            const Row(
-              children: [
-                MyBox(colorOTPgreen, insideText: Text('IDEJE  \nVISSZATEKINTENI.',style: TextStyle(color:Colors.white,fontSize:35))) // TODO Mybox would look cooler if it had rounded edges
-              ],
-            ),
-             Row(children:  <Widget>[
-              const Padding(padding: EdgeInsets.only(left:50)),
-              Expanded(child:Image.asset("resources/images/rewind_icon.png",fit:BoxFit.fill)),
-              const Padding(padding: EdgeInsets.only(right:50))
-            ]),
-            const Row(
-              children: [
-                MyBox(colorOTPgreen,
-                    insideText: Text('Visszatekintés az elmúlt hónap kiadásaira, más felhasználók adataihoz viszonyítva. \n\n'
-                      'Visszajelzés a költési tendenciákról hasonló anyagi helyzetben lévő felhasználók körében. ',
-                      style: TextStyle(color:Colors.white,fontSize:14, fontWeight:FontWeight.bold))),
-              ],
-            ),
-            TextButton(
-              style: ButtonStyle(
-              foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
-              overlayColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-              if (states.contains(MaterialState.hovered)) {
-                return colorOTPgreen.withOpacity(0.04);
-              }
-              if (states.contains(MaterialState.focused) ||
-              states.contains(MaterialState.pressed)) {
-                return Colors.greenAccent.withOpacity(0.12);
-              }
-              return null; // Defer to the widget's default.
-              },
+            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/20,bottom:0,right:MediaQuery.of(context).size.width/1.18),
+              child: TextButton(
+                  onPressed: () {Navigator.pop(context);},
+                  child: const Text('X',style: TextStyle(color:colorOTPwhite, fontSize: 18),)
               ),
+            ),
+            MyBox(colorOTPwhite, MediaQuery.of(context).size.height/1.8, 20,
+                Column(
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
+                  const Text("IDEJE \nVISSZATEKINETNI", style: TextStyle(color:colorOTPdarkGreen,fontSize: 32,fontStyle: FontStyle.normal, decoration: TextDecoration.none)),
+                  Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
+                  SizedBox(
+                      height: MediaQuery.of(context).size.height/3,
+                      width: MediaQuery.of(context).size.height/3,
+                    child: Image.asset('resources/images/rewind_icon.png', fit:BoxFit.cover),
+                  )
+                ]
               ),
-              onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const StoryContainer()));}, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
-              child: const Text('Kezdjünk bele!')
+            ),
+            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40),
+                child:MyBox(colorOTPMidGrey, MediaQuery.of(context).size.height/5, 50,
+                  Column(
+                      children: <Widget>[
+                        Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40)),
+                        Container(
+                          height: MediaQuery.of(context).size.height/15,
+                          child:Row(
+                            children: <Widget> [
+                              Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/10),
+                                  child:SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: Image.asset('resources/images/stat_icon_small.png',fit: BoxFit.cover,),
+                                    ),
+                                  ),
+                              Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/20),
+                                child:const Text("Visszatekintés az elmúlt hónap kiadásaira, \nmás felhasználók adataihoz viszonyítva", style:
+                                TextStyle(color: colorOTPgrey, fontSize: 10, fontWeight: FontWeight.bold, decoration: TextDecoration.none))
+                              )
+                            ],
+                          )
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height/15,
+                            child:Row(
+                              children: <Widget> [
+                                Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/10),
+                                  child:SizedBox(
+                                    height: 30,
+                                    width: 30,
+                                    child: Image.asset('resources/images/conv_icon_small.png',fit: BoxFit.fitWidth,),
+                                  ),
+                                ),
+                                Padding(padding: EdgeInsets.only(left: MediaQuery.of(context).size.width/40),
+                                    child:const Text("Visszajelzés a költési tendenciákról hasonló\nanyagi helyzetben lévő felhasználók körében", style:
+                                    TextStyle(color: colorOTPgrey, fontSize: 10, fontWeight: FontWeight.bold, decoration: TextDecoration.none))
+                                )
+                              ],
+                            )
+                        ),
+                      ]
+                  ),
+                ),
+            ),
+            Padding(padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/40),
+            child:
+              MyBox(colorOTPwhite, MediaQuery.of(context).size.height/15, 100,
+                TextButton(
+                      onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => const StoryContainer()));}, // TODO: build story pages and slide through them like in Instagram (time limit, or tap to skip)
+                      child: const Text('KEZDJÜK!',style: TextStyle(color: colorOTPdarkGrey, fontSize: 20),)
+              )
+              )
             )
           ],
       )
@@ -164,27 +202,10 @@ class StoryContainer extends StatelessWidget {
         color: colorOTPdarkGrey,
         child:Column(
         children: <Widget>[
-          Row(
-            children: [
-              MyBox(colorOTPgreen,height: 50),
+          //TODO STORY CLASS
             ],
           ),
-          Row(
-            children: [
-              MyBox(lightGreen),
-              MyBox(lightGreen),
-            ],
-          ),
-          MyBox(colorOTPgreen, insideText: Text(backend.currentUser == null ? "" : '${backend.currentUser!.name}', style:const TextStyle(color: Colors.white,fontSize:30))),
-          Row(
-            children: [
-              MyBox(lightGreen, height: 200),
-              MyBox(lightGreen, height: 200),
-            ],
-          ),
-        ],
-        )
-    );
+        );
   }
 }
 
@@ -283,7 +304,7 @@ class MainPage extends State<OTPAppPage> {
                     children: <Widget> [
                         Row(
                         children: [
-                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/14.5,bottom:0,right:0,left:0))
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/15,bottom:0,right:0,left:0))
                         ],
                       ),
                       Row(
@@ -318,23 +339,21 @@ class MainPage extends State<OTPAppPage> {
                       ),
                         Row(
                         children: [
-                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.5,left:MediaQuery.of(context).size.width/10),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance}',
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.9,left:MediaQuery.of(context).size.width/10),
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
                                 style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
                       ),
-                        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.1,),
+                        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.3,),
                             child: Transform.rotate(angle: -math.pi / 1.2,
-                              //TODO: set Android model to Galaxy S20 Plus (or same aspect ratio), and adjust element to match with bg image (aspect ratio 20:9)
-                              //TODO: best if it works with iPhone and Android as well
                               child: CircularPercentIndicator(
                                 radius: 130,
-                                lineWidth: 12.0,
-                                percent:0.2, //todo max % current spent
+                                lineWidth: 15.0,
+                                percent: backend.currentUser!.avgSpend! == 600000 ? 0.4 : backend.currentUser!.avgSpend! < 600000 ? backend.currentUser!.avgSpend! / 600000 : 0.4 - backend.currentUser!.avgSpend! / 600000, //todo max % current spent
                                 center: Transform.rotate(angle: math.pi / 1.2,
                                         child: Padding(padding: const EdgeInsets.only(top:20),
-                                                child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.name}',
+                                                child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
                                                 style: const TextStyle(color: colorOTPgreen, fontSize: 20),) //TODO: real money value from db)
                                                 ),
                                 ),
@@ -343,6 +362,12 @@ class MainPage extends State<OTPAppPage> {
                                 backgroundColor: Colors.transparent,
                               ),)
                         ),
+                      Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/30),
+                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.8),
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.avgSpend} Ft',
+                                style: const TextStyle(color: colorOTPgrey, fontSize: 13),)
+                          ),
+                      ),
                     ],
                   ),
                 ),
