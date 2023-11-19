@@ -36,14 +36,14 @@ def GetAverage(df,user_id, groupName):
  
 def GetDetailsData(user_id : int) :
     df = getData()
-    monthSums = df.filter(df.id == user_id).groupBy(month("date").alias("month")).agg(sum("balance").alias("amount"))
+    monthOrder = df.filter(df.id == user_id).groupBy(month("date").alias("month")).agg(sum("balance").alias("amount")).orderBy(desc("amount")).collect()
     return {
         "vendorDatas" :  GetTopPercent(df,user_id,"vendor"),
         "categoryDatas" :  GetTopPercent(df,user_id,"category"),
         "countryDatas" :  GetTopPercent(df,user_id,"country"),
         "visitedCountriesThisYear" : df.filter(df.id == user_id).select("country").distinct().count(),
-        "hardestMounth" : monthSums.select(max("amount").alias("amount")).collect()[0].amount,
-        "easiestMounth" : monthSums.select(min("amount").alias("amount")).collect()[0].amount,
+        "hardestMounth" : monthOrder[0].month,
+        "easiestMounth" : monthOrder[0].month,
         "favoriteCountry" : df.filter(df.id == user_id).groupBy("country").agg(sum(df.balance).alias("amount")).orderBy(desc("amount")).collect()[0].country,
         "favoriteVendor" : df.filter(df.id == user_id).groupBy("vendor").agg(sum(df.balance).alias("amount")).orderBy(desc("amount")).collect()[0].vendor,
         "vendorAvgDatas" :  GetAverage(df,user_id,"vendor"),

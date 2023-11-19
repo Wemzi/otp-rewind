@@ -6,7 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from .models import User
 from .serializers import UserSerializer
-from .userData import GetUserData
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 # class UserViewSet(viewsets.ModelViewSet):
 #     serializer_class = UserSerializer
@@ -33,11 +34,11 @@ class UserApiView(APIView):
             return None
 
     # 3. Retrieve
+    @method_decorator(cache_page(60*60*12))
     def get(self, request, user_id, *args, **kwargs):
         '''
         Retrieves the UserInfo with given user id
         '''
-#        user_id = request.data.get('user_id')
         user_instance = self.get_object(user_id) # or user_id
         if not user_instance:
             return Response(
@@ -52,6 +53,7 @@ class UserApiView(APIView):
                 "birthdate": user_instance.birthdate,
                 "balance": user_instance.balance,
                 }
+        from .userData import GetUserData
         response = GetUserData(user)
         return Response({"currentUser": response}, status=status.HTTP_200_OK)
 
