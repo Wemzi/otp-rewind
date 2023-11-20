@@ -77,34 +77,6 @@ class OTPAppPage extends StatefulWidget {
   State<OTPAppPage> createState() => MainPage();
 }
 
-
-/*
-  final _pageController = PageController(initialPage: 0);
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(padding: EdgeInsets.only(top:45)),
-        MyBox(lightGreen, height: 100,
-          insideText: const Text('Sok volt a nyaralás...',
-          style: TextStyle(color:Colors.white,fontSize:35))
-        ),
-        MyBox(mediumGreen, height: 200,
-    insideText: Text(backend.currentUser == null ? "" :
-                                '${backend.currentUser!.name}')),
-      ],
-    );
-  }
-}
-*/
-
 class RewindStartupPage extends StatelessWidget {
   const RewindStartupPage({super.key});
 

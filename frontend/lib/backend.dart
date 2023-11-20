@@ -19,7 +19,6 @@ getUserInfo(int userId) async {
   }
   else{
     data = jsonDecode(r!.body);
-    print(data);
   }
 
   User retVal = User(
@@ -28,11 +27,31 @@ getUserInfo(int userId) async {
       data['currentUser']['country'] as String,
       data['currentUser']['birthdate'] as String,
       data['currentUser']['balance'] as int,
-      (data['currentUser']['averages']['averageSpend'] as double).round()
+      (data['currentUser']['averages']['averageSpend'] as double).round(),
+      data
   );
- print(retVal.name);
- retVal.loadExtendedData(data_fallback);
  return retVal;
+}
+
+enum Type{
+  VENDOR,
+  COUNTRY,
+  CATEGORY,
+  UNKNOWN
+}
+
+Type getType(String type)
+{
+  switch(type){
+    case "vendor":
+      return Type.VENDOR;
+    case "country":
+      return Type.COUNTRY;
+    case "category":
+      return Type.CATEGORY;
+    default:
+      return Type.UNKNOWN;
+  }
 }
 
 class User {
@@ -43,13 +62,18 @@ class User {
   int? balance;
   int? avgSpend;
   Data? data;
+  List<Content> storyContent = [];
 
-  User(int this.id, String this.name, String this.country,
-      String this.birthdate, int this.balance, int this.avgSpend);
-
-  void loadExtendedData(Map<String,dynamic> recData)
-  {
-    data = Data(recData);
+  User(int this.id, String this.name, String this.country, String this.birthdate, int this.balance, int this.avgSpend, inJson){
+    data = Data(inJson);
+    for(var element in data!.json['currentUser']['extendedDataYearly']['topFacts']) {
+      var content = Content(name: element['name'],
+          percentage: element['topPercent'],
+          amount: element['amount'],
+          type: getType(element['type']));
+      content.updateContentTexts();
+      storyContent.add(content);
+    }
   }
 }
 
@@ -59,3 +83,41 @@ class Data{
 }
 
 User? currentUser;
+
+class Content{
+  String? informationText;
+  String? informationPlusInfo;
+  String? statText;
+  final String name;
+  final double percentage;
+  final int amount;
+  final Type type;
+
+  Content({
+    required this.name,
+    required this.percentage,
+    required this.amount,
+    required this.type,
+  });
+
+  void updateContentTexts()
+  {
+    switch(type){
+      case Type.VENDOR:
+        informationText = "KEDVENC KERESKEDŐ\n$name";
+        informationPlusInfo = '"Ebben a hónapban kimagaslóan sokat jártál kedvenc élelmiszerüzletláncodba. Ez 120%-al nagyobb költés mint előző hónapban."'; //TODO AI??
+        statText = "Legmagasabb ${percentage}%";
+      case Type.CATEGORY:
+        informationText = "KEDVENC KATEGÓRIA\n$name";
+        informationPlusInfo = "IDE GENERÁLUNK AI-VAL IDE GENERÁLUNK AI-VAL SZÖVEGET MAJD SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
+        statText = "Legmagasabb ${percentage}%";
+      case Type.COUNTRY:
+        informationText = "KEDVENC ORSZÁG\n$name";
+        informationPlusInfo = "IDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
+        statText = "Legmagasabb ${percentage}%";
+      default:
+        break;
+    }
+  }
+
+}

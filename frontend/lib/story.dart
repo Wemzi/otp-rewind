@@ -1,9 +1,8 @@
-import 'dart:convert';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:otp_rewind/main.dart';
 import "backend.dart" as backend;
+import 'backend.dart';
 import 'end.dart';
 
 
@@ -28,87 +27,15 @@ extension ColorBrightness on Color {
   }
 }
 
-enum Type{
-  VENDOR,
-  COUNTRY,
-  CATEGORY,
-  UNKNOWN
-}
-
-class Content{
-  String? _informationText;
-  String? _informationPlusInfo;
-  String? _statText;
-  final String name;
-  final int percentage;
-  final int amount;
-  final Type type;
-
-  Content({
-    required this.name,
-    required this.percentage,
-    required this.amount,
-    required this.type,
-  });
-
-  void updateContentTexts()
-  {
-    switch(type){
-      case Type.VENDOR:
-        _informationText = "KEDVENC KERESKEDŐ\n$name";
-        _informationPlusInfo = '"Ebben a hónapban kimagaslóan sokat jártál kedvenc élelmiszerüzletláncodba. Ez 120%-al nagyobb költés mint előző hónapban."'; //TODO AI??
-        _statText = "Legmagasabb ${percentage}%";
-        case Type.CATEGORY:
-        _informationText = "KEDVENC KATEGÓRIA\n$name";
-        _informationPlusInfo = "IDE GENERÁLUNK AI-VAL IDE GENERÁLUNK AI-VAL SZÖVEGET MAJD SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
-        _statText = "Legmagasabb ${percentage}%";
-        case Type.COUNTRY:
-        _informationText = "KEDVENC ORSZÁG\n$name";
-        _informationPlusInfo = "IDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
-        _statText = "Legmagasabb ${percentage}%";
-        default:
-        break;
-    }
-  }
-
-}
-
 class Story{
   final Duration duration;
   final backend.User user;
-  List<Content> _content = [];
-
 
   Story({
     required this.duration,
     required this.user,
   });
-
-  Type getType(String type)
-  {
-    switch(type){
-      case "vendor":
-        return Type.VENDOR;
-      case "country":
-        return Type.COUNTRY;
-      case "Category":
-        return Type.CATEGORY;
-      default:
-        return Type.UNKNOWN;
-    }
-  }
-
-  void getStoryContent()
-  {
-    _content = [];
-    for(var element in user.data!.json['currentUser']['extendedDataYearly']['topFacts']){
-      var content = Content(name: element['name'], percentage: element['topPercentage'], amount: element['amount'], type: getType(element['type']));
-      content.updateContentTexts();
-      _content.add(content);
-    }
-  }
 }
-
 
 class StoryBox extends StatelessWidget{
   final Color color1;
@@ -123,7 +50,7 @@ class StoryBox extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-        borderRadius: BorderRadius.circular(radius!),
+        borderRadius: BorderRadius.circular(radius),
         child: Container(
           height: height,
           width: width,
@@ -161,7 +88,7 @@ class StoryBox extends StatelessWidget{
 class StoryScreen extends StatefulWidget{
   final Story story;
 
-  const StoryScreen({required this.story});
+  const StoryScreen({super.key, required this.story});
 
   @override
   State<StatefulWidget> createState() => _StoryScreenState();
@@ -181,8 +108,7 @@ class _StoryScreenState extends State<StoryScreen>
     _pageController = PageController();
     _animationController = AnimationController(vsync: this);
 
-    widget.story.getStoryContent();
-    final Content firstContent = widget.story._content.first;
+    final Content firstContent = widget.story.user.storyContent.first;
     _loadStory(story: firstContent,animateToPage: false);
 
     _animationController.addStatusListener((status) {
@@ -190,9 +116,9 @@ class _StoryScreenState extends State<StoryScreen>
         _animationController.stop();
         _animationController.reset();
         setState(() {
-          if(_currentIndex + 1 < widget.story._content.length) {
+          if(_currentIndex + 1 < widget.story.user.storyContent.length) {
             _currentIndex += 1;
-            _loadStory(story: widget.story._content[_currentIndex]);
+            _loadStory(story: widget.story.user.storyContent[_currentIndex]);
           }else{
             _animationController.stop();
             Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
@@ -227,12 +153,12 @@ class _StoryScreenState extends State<StoryScreen>
                         ),
                       Padding(padding: const EdgeInsets.only(top: 30),
                           child: StoryBox(width: MediaQuery.of(context).size.width/1.6, radius: 50, color1: colorTheme1.darken(0.1), color2: colorTheme2.darken(0.1), height: 125,
-                                  child: Center(child:Text(cont._informationPlusInfo!, style: const TextStyle(color: colorOTPwhite,fontSize: 12, fontWeight: FontWeight.bold)))
+                                  child: Center(child:Text(cont.informationPlusInfo!, style: const TextStyle(color: colorOTPwhite,fontSize: 12, fontWeight: FontWeight.bold)))
                           ),
                       ),
                         Padding(padding: const EdgeInsets.only(top: 30),
                           child: SizedBox(
-                            child: Text(cont._informationText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+                            child: Text(cont.informationText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
                           )
                       ),
                     ],
@@ -252,14 +178,14 @@ class _StoryScreenState extends State<StoryScreen>
                     ),
                       Padding(padding: const EdgeInsets.only(top: 10),
                           child: SizedBox(
-                            child: Text(cont._statText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
+                            child: Text(cont.statText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
                           )
                       ),
                    ]
                 )
           )
           ),
-          Padding(padding: EdgeInsets.only(top:  1),
+          Padding(padding: const EdgeInsets.only(top:  1),
               child: Center(
                 child:
                   Padding(
@@ -286,7 +212,7 @@ class _StoryScreenState extends State<StoryScreen>
   }
   @override
   Widget build(BuildContext context) {
-    final Content cont = widget.story._content[_currentIndex];
+    final Content cont = widget.story.user.storyContent[_currentIndex];
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -314,8 +240,7 @@ class _StoryScreenState extends State<StoryScreen>
                 physics: const NeverScrollableScrollPhysics(),
                 controller: _pageController,
                 itemBuilder: (context, i) {
-                  widget.story.getStoryContent();
-                  final Content cont = widget.story._content[i];
+                  final Content cont = widget.story.user.storyContent[i];
                   return _createPageContent(cont);
                 }
             ),
@@ -324,7 +249,7 @@ class _StoryScreenState extends State<StoryScreen>
                   left: 10.0,
                   right: 10.0,
                   child: Row(
-                    children: widget.story._content
+                    children: widget.story.user.storyContent
                         .asMap()
                         .map((i,e){
                           return MapEntry(i, AnimatedBar(animController: _animationController, position: i, currentIndex : _currentIndex));
@@ -345,7 +270,7 @@ class _StoryScreenState extends State<StoryScreen>
       setState(() {
         if(_currentIndex - 1 >=0){
           _currentIndex -= 1;
-          _loadStory(story: widget.story._content[_currentIndex]);
+          _loadStory(story: widget.story.user.storyContent[_currentIndex]);
         }
         else{
           if(firstTime){
@@ -361,9 +286,9 @@ class _StoryScreenState extends State<StoryScreen>
       });
     }else if(dx > 2 * screenWidth / 3 ) {
       setState(() {
-        if (_currentIndex + 1 < widget.story._content.length) {
+        if (_currentIndex + 1 < widget.story.user.storyContent.length) {
           _currentIndex += 1;
-          _loadStory(story: widget.story._content[_currentIndex]);
+          _loadStory(story: widget.story.user.storyContent[_currentIndex]);
         } else {
           _animationController.stop();
           Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
