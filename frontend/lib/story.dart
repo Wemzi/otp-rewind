@@ -234,6 +234,9 @@ class _StoryScreenState extends State<StoryScreen>
                 Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
               }
             },
+          onTapUp: (details) => {
+            _animationController.forward()
+          },
           child: Stack(
             children: <Widget> [
               PageView.builder(
@@ -294,6 +297,8 @@ class _StoryScreenState extends State<StoryScreen>
           Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
         }
       });
+    }else{ //MID HOLD
+      _animationController.stop();
     }
   }
 
