@@ -98,9 +98,15 @@ class StoryScreen extends StatefulWidget{
 class _StoryScreenState extends State<StoryScreen>
     with SingleTickerProviderStateMixin{
 
+  bool isPushed = false;
   late PageController _pageController;
   late AnimationController _animationController;
   int _currentIndex = 0;
+
+  void _pushNavigator(BuildContext context){
+    isPushed = true;
+    Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+  }
 
   @override
   void initState() {
@@ -121,7 +127,7 @@ class _StoryScreenState extends State<StoryScreen>
             _loadStory(story: widget.story.user.storyContent[_currentIndex]);
           }else{
             _animationController.stop();
-            Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+            _pushNavigator(context);
           }
         });
       }
@@ -231,11 +237,11 @@ class _StoryScreenState extends State<StoryScreen>
                 }
               } else if(details.delta.dx < -sensitivity){
                 _animationController.stop();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+                _pushNavigator(context);
               }
             },
           onTapUp: (details) => {
-            _animationController.forward()
+            if(!isPushed) _animationController.forward()
           },
           child: Stack(
             children: <Widget> [
@@ -294,7 +300,7 @@ class _StoryScreenState extends State<StoryScreen>
           _loadStory(story: widget.story.user.storyContent[_currentIndex]);
         } else {
           _animationController.stop();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+          _pushNavigator(context);
         }
       });
     }else{ //MID HOLD
