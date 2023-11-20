@@ -28,7 +28,7 @@ getUserInfo(int userId) async {
       data['currentUser']['country'] as String,
       data['currentUser']['birthdate'] as String,
       data['currentUser']['balance'] as int,
-      data['currentUser']['averages']['averageSpend'] as int,
+      (data['currentUser']['averages']['averageSpend'] as double).round()
   );
  print(retVal.name);
  retVal.loadExtendedData(data_fallback);

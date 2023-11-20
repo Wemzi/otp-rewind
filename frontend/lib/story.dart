@@ -194,6 +194,7 @@ class _StoryScreenState extends State<StoryScreen>
             _currentIndex += 1;
             _loadStory(story: widget.story._content[_currentIndex]);
           }else{
+            _animationController.stop();
             Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
           }
         });
@@ -286,48 +287,52 @@ class _StoryScreenState extends State<StoryScreen>
   @override
   Widget build(BuildContext context) {
     final Content cont = widget.story._content[_currentIndex];
-    return Scaffold(
-      backgroundColor: colorOTPdarkGrey,
-      body: GestureDetector(
-        onTapDown: (details) => _onTapDown(details,cont),
-        onHorizontalDragUpdate: (details) {
-            int sensitivity = 8;
-            if (details.delta.dx > sensitivity) {
-              if(firstTime)
-              {
-                firstTime = false;
-                Navigator.pop(context); Navigator.pop(context);
-              }else{
-                Navigator.pop(context);
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: colorOTPdarkGrey,
+        body: GestureDetector(
+          onTapDown: (details) => _onTapDown(details,cont),
+          onHorizontalDragUpdate: (details) {
+              int sensitivity = 8;
+              if (details.delta.dx > sensitivity) {
+                if(firstTime)
+                {
+                  firstTime = false;
+                  Navigator.pop(context); Navigator.pop(context);
+                }else{
+                  Navigator.pop(context);
+                }
+              } else if(details.delta.dx < -sensitivity){
+                _animationController.stop();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
               }
-            } else if(details.delta.dx < -sensitivity){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
-            }
-          },
-        child: Stack(
-          children: <Widget> [
-            PageView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: _pageController,
-              itemBuilder: (context, i) {
-                widget.story.getStoryContent();
-                final Content cont = widget.story._content[i];
-                return _createPageContent(cont);
-              }
-          ),
-            Positioned(
-                top: 40.0,
-                left: 10.0,
-                right: 10.0,
-                child: Row(
-                  children: widget.story._content
-                      .asMap()
-                      .map((i,e){
-                        return MapEntry(i, AnimatedBar(animController: _animationController, position: i, currentIndex : _currentIndex));
-                    }).values.toList(),
-                )
-            )
-        ]),
+            },
+          child: Stack(
+            children: <Widget> [
+              PageView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                controller: _pageController,
+                itemBuilder: (context, i) {
+                  widget.story.getStoryContent();
+                  final Content cont = widget.story._content[i];
+                  return _createPageContent(cont);
+                }
+            ),
+              Positioned(
+                  top: 40.0,
+                  left: 10.0,
+                  right: 10.0,
+                  child: Row(
+                    children: widget.story._content
+                        .asMap()
+                        .map((i,e){
+                          return MapEntry(i, AnimatedBar(animController: _animationController, position: i, currentIndex : _currentIndex));
+                      }).values.toList(),
+                  )
+              )
+          ]),
+        ),
       ),
     );
   }
@@ -360,6 +365,7 @@ class _StoryScreenState extends State<StoryScreen>
           _currentIndex += 1;
           _loadStory(story: widget.story._content[_currentIndex]);
         } else {
+          _animationController.stop();
           Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
         }
       });

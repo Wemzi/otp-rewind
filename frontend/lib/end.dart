@@ -9,49 +9,52 @@ class EndScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colorOTPdarkGrey,
-      appBar: AppBar(
-        title: const Text(
-          'Havi visszatekintő',
-          style: TextStyle(color: colorOTPwhite, fontSize: 14)
-        ),
-        centerTitle: true,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
         backgroundColor: colorOTPdarkGrey,
-        leading: Padding(padding: const EdgeInsets.all(7.5), child: ElevatedButton(
-            onPressed: () {
-              if(firstTime)
-                {
-                  firstTime=false; Navigator.pop(context); Navigator.pop(context); Navigator.pop(context);
+        appBar: AppBar(
+          title: const Text(
+            'Havi visszatekintő',
+            style: TextStyle(color: colorOTPwhite, fontSize: 14)
+          ),
+          centerTitle: true,
+          backgroundColor: colorOTPdarkGrey,
+          leading: Padding(padding: const EdgeInsets.all(7.5), child: ElevatedButton(
+              onPressed: () {
+                if(firstTime)
+                  {
+                    firstTime=false; Navigator.pop(context); Navigator.pop(context); Navigator.pop(context);
+                  }
+                  else{
+                  Navigator.pop(context); Navigator.pop(context);
                 }
-                else{
-                Navigator.pop(context); Navigator.pop(context);
-              }
-              },
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: const EdgeInsets.all(5),
-              backgroundColor: colorOTPdarkGrey,
+                },
+              style: ElevatedButton.styleFrom(
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(5),
+                backgroundColor: colorOTPdarkGrey,
+              ),
+              child: const Icon(Icons.arrow_back_ios_new, color: colorOTPgreen),
             ),
-            child: const Icon(Icons.arrow_back_ios_new, color: colorOTPgreen),
           ),
         ),
+        body: const Column(
+            children: [
+              Row(children: [Padding(padding: EdgeInsets.all(10))]),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      _OverallSpendingWidget(),
+                    ],
+                  ),
+                ],
+              )
+            ],
+          ),
       ),
-      body: const Column(
-          children: [
-            Row(children: [Padding(padding: EdgeInsets.all(10))]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    _OverallSpendingWidget(),
-                  ],
-                ),
-              ],
-            )
-          ],
-        ),
     );
   }
 }
