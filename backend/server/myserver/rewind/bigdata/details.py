@@ -1,6 +1,6 @@
 from  rewind.bigdata.dataprovider import getData
 from pyspark.sql.functions import col, sum, desc, lit, monotonically_increasing_id, month, avg, min, max
-
+from rewind.ai.genText import GetGenAdvice
     
 def GetTopPercent(df, user_id, groupName):
     groups = df.select(col(groupName).alias("name")).distinct().collect()
@@ -15,9 +15,10 @@ def GetTopPercent(df, user_id, groupName):
         usersnum = ranking.count()
         currentUser = ranking.filter(ranking.id == user_id).collect()[0]
         groupdata["name"] = group.name
-        groupdata["topPercent"] = (currentUser.rank) / usersnum * 100
+        groupdata["topPercent"] = round(((currentUser.rank) / usersnum * 100), 1)
         groupdata["amount"] = currentUser.allAmount
         groupdata["type"] = groupName
+        groupdata["advice"] = GetGenAdvice(group.name, groupName)
         groupsdata.append(groupdata)
     return groupsdata
 
@@ -31,7 +32,7 @@ def GetAverage(df,user_id, groupName):
                     .groupBy(month("date").alias("month"))\
                     .agg(sum("balance").alias("allAmount"))\
                     .select(avg("allAmount").alias("avgAmount")).collect()[0].avgAmount
-        groupsdata[group.name] = avgAmount
+        groupsdata[group.name] = int(round(avgAmount))
     return groupsdata        
  
 def GetDetailsData(user_id : int) :
