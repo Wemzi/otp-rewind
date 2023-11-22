@@ -11,7 +11,7 @@ import 'package:wave/wave.dart';
 class WaveClipper extends CustomClipper<Path>{
   @override
   Path getClip(Size size) {
-    var path = new Path();
+    var path = Path();
     path.lineTo(0, size.height);
     var firstStart = Offset(size.width/ 5, size.height);
     var firstEnd = Offset(size.width/ 2.25, size.height - 50.0);
@@ -219,11 +219,34 @@ class _StoryScreenState extends State<StoryScreen>
                       ),
                     ),
                 Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 40, left: MediaQuery.of(context).size.width / 3 + 20,),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height / 9,
-                    width: MediaQuery.of(context).size.width / 1.9,
-                    child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,)
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 30, left: MediaQuery.of(context).size.width / 3 + 20,),
+                  child: Container(
+                      height: MediaQuery.of(context).size.height / 9,
+                      width: MediaQuery.of(context).size.width / 1.9,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(24.0),
+                          color: colorOTPgreen.withOpacity(0.4),
+                          boxShadow: [
+                            BoxShadow(
+                              color: colorOTPgrey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 10,
+                              offset: const Offset(0, -2), // changes position of shadow
+                            ),
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.4),
+                              spreadRadius: 2,
+                              blurRadius: 10,
+                              offset: const Offset(0, 1), // changes position of shadow
+                            )
+                          ]
+                      ),
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,),
+                      ),
+                    )
                   ),
                 ),
                   Padding(

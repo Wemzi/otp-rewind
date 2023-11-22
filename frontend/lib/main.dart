@@ -83,7 +83,7 @@ class RewindStartupPage extends StatelessWidget {
 
   Story getUser()
   {
-    return Story(user: backend.currentUser!, duration: const Duration(seconds: 7));
+    return Story(user: backend.currentUser!, duration: const Duration(seconds: 10));
   }
 
   @override
@@ -307,7 +307,7 @@ class MainPage extends State<OTPAppPage> {
   
   Story getUser()
   {
-    return Story(user: backend.currentUser!, duration: const Duration(seconds: 7));
+    return Story(user: backend.currentUser!, duration: const Duration(seconds: 10));
   }
   
   void rewindTapped()
