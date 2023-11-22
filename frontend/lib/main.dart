@@ -409,9 +409,9 @@ class MainPage extends State<OTPAppPage> {
                                 lineWidth: 15.0,
                                 percent: backend.currentUser == null ? 0.4 : backend.currentUser!.avgSpend! < 600000 ? 0.6 : 0.3,
                                 center: Transform.rotate(angle: math.pi / 1.2,
-                                        child: Padding(padding: const EdgeInsets.only(top:20),
-                                                child: Text(backend.currentUser == null ? "600 000 Ft" : "600 000 Ft",
-                                                style: const TextStyle(color: colorOTPgreen, fontSize: 20),)
+                                        child: const Padding(padding: EdgeInsets.only(top:20),
+                                                child:  Text( "600 000 Ft",
+                                                style: TextStyle(color: colorOTPgreen, fontSize: 20),)
                                                 ),
                                 ),
                                 circularStrokeCap: CircularStrokeCap.round,

@@ -79,11 +79,7 @@ class StoryBox extends StatelessWidget{
         )
     );
   }
-
-
-
 }
-
 
 class StoryScreen extends StatefulWidget{
   final Story story;
