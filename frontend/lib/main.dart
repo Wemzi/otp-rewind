@@ -25,6 +25,7 @@ const colorOTPwhite = Color.fromARGB(255, 250, 251, 252);
 const colorOTPdarkGrey = Color.fromARGB(255, 42, 43, 46);
 const colorOTPdarkGreen = Color.fromARGB(255, 43, 101, 78);
 const colorOTPMidGrey = Color.fromARGB(255, 54, 56, 60);
+const colorOTPlightGrey = Color.fromARGB(255,160,165,176);
 bool firstTime = true;
 
 class MyBox extends StatelessWidget {
