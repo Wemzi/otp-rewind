@@ -221,8 +221,8 @@ class _StoryScreenState extends State<StoryScreen>
                 Padding(
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 30, left: MediaQuery.of(context).size.width / 3 + 20,),
                   child: Container(
-                      height: MediaQuery.of(context).size.height / 9,
-                      width: MediaQuery.of(context).size.width / 1.9,
+                      height: MediaQuery.of(context).size.height / 8,
+                      width: MediaQuery.of(context).size.width / 1.8,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(24.0),
                           color: colorOTPgreen.withOpacity(0.4),
@@ -244,7 +244,7 @@ class _StoryScreenState extends State<StoryScreen>
                     child: Center(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,),
+                        child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,),
                       ),
                     )
                   ),
