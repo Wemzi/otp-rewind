@@ -117,7 +117,7 @@ List<Widget> buildStoryContentOverview()
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [ Text('${element.amount} Ft (Legmagasabb ${element.percentage}%)',
+                children: [ Text('${backend.formatter.format(element.amount).replaceAll(',', ' ')} Ft (Legmagasabb ${element.percentage}%)',
                   style: const TextStyle(
                     fontSize: 16,
                     color: colorOTPgreen,
@@ -194,7 +194,7 @@ class _OverallSpendingWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [ Text(
                 backend.currentUser!=null ?
-                '${backend.currentUser!.avgSpend} Ft' : '500 345 Ft',
+                '${backend.formatter.format(backend.currentUser!.avgSpend).replaceAll(',',' ')} Ft' : '500 345 Ft',
                 style: const TextStyle(
                   fontSize: 16,
                   color: colorOTPwhite,

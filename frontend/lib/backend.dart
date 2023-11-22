@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 
 Map<int,String> monthNamesInHungarian =
 {
@@ -17,6 +18,8 @@ Map<int,String> monthNamesInHungarian =
   12: "December"
 
 };
+
+var formatter = NumberFormat('#,###');
 
 enum Type{
   VENDOR,

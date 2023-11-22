@@ -293,17 +293,14 @@ class MainPage extends State<OTPAppPage> {
 
   void login() async
   {
-    //tells ui to refresh
     setState(() {
       isLogin = true;
     });
     backend.currentUser = await backend.getUserInfo(3);
-    print(backend.currentUser?.name);
     setState((){
       if(backend.currentUser != null)
       {
         isLogin=false;
-        Navigator.push(context, MaterialPageRoute(builder: (context) => build(context)));
       }
     });
   }
@@ -315,7 +312,6 @@ class MainPage extends State<OTPAppPage> {
   
   void rewindTapped()
   {
-    print("Rewind tapped");
     if(backend.currentUser!=null && firstTime)
     {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
@@ -378,13 +374,13 @@ class MainPage extends State<OTPAppPage> {
                               )
                           ),
                           Padding(
-                              padding: EdgeInsets.only(left:MediaQuery.of(context).size.width / 17,bottom:0,right:0,top:0), //apply padding to all four sides
+                              padding: EdgeInsets.only(left:MediaQuery.of(context).size.width / 16.5,bottom:0,right:0,top:0), //apply padding to all four sides
                               child: Text(backend.currentUser == null ? "Kiss Péter" : '${backend.currentUser!.name}',
                                 style: const TextStyle(color: colorOTPwhite),
                               )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.6,bottom:0,right:0,top:0), //apply padding to all four sides
+                            padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.65,bottom:0,right:0,top:0), //apply padding to all four sides
                             child: GestureDetector(
                               onTap: () {rewindTapped();},
                               child: SizedBox(
@@ -402,7 +398,7 @@ class MainPage extends State<OTPAppPage> {
                         Row(
                         children: [
                           Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/9.5,left:MediaQuery.of(context).size.width/10),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.formatter.format(backend.currentUser!.balance).replaceAll(',',' ')} Ft',
                                 style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
@@ -424,9 +420,9 @@ class MainPage extends State<OTPAppPage> {
                                 backgroundColor: Colors.transparent,
                               ),)
                         ),
-                      Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/65),
-                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.7),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.avgSpend} Ft',
+                      Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/60),
+                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.6),
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.formatter.format(backend.currentUser!.avgSpend).replaceAll(',',' ')} Ft',
                                 style: const TextStyle(color: colorOTPgrey, fontSize: 13),)
                           ),
                       ),

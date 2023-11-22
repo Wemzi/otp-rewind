@@ -295,7 +295,7 @@ class _StoryScreenState extends State<StoryScreen>
                   child: FloatingActionButton(
                     onPressed: () async {
                       final image = await controller.capture();
-                      saveAndShare(image!);
+                      saveAndShare(image!); // TODO pause story while sharing
                     },
                     backgroundColor: colorOTPdarkGrey,
                     foregroundColor: colorOTPgreen,
