@@ -41,7 +41,7 @@ class EndScreen extends StatelessWidget{
         ),
         body: Column(
             children: [
-              Row(children: [Padding(padding: EdgeInsets.all(10))]),
+              const Row(children: [Padding(padding: EdgeInsets.all(10))]),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -91,7 +91,7 @@ List<Widget> buildStoryContentOverview()
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [ Text( '${element.informationText}', // TODO inject user data
+                children: [ Text( '${element.informationText}',
                   style: const TextStyle(
                     fontSize: 18,
                     color: colorOTPwhite,
@@ -106,7 +106,18 @@ List<Widget> buildStoryContentOverview()
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [ Text('${element.amount}',
+                children: [ Text(element.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: colorOTPwhite,
+                    height: 1,
+                  ),
+                  textAlign: TextAlign.center,
+                ),],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [ Text('${element.amount} Ft (Legmagasabb ${element.percentage}%)',
                   style: const TextStyle(
                     fontSize: 16,
                     color: colorOTPgreen,
@@ -182,7 +193,8 @@ class _OverallSpendingWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [ Text(
-                backend.currentUser!=null ? '${backend.currentUser!.avgSpend} Ft' : '500 345 Ft', // TODO inject user data
+                backend.currentUser!=null ?
+                '${backend.currentUser!.avgSpend} Ft' : '500 345 Ft',
                 style: const TextStyle(
                   fontSize: 16,
                   color: colorOTPwhite,
@@ -235,13 +247,13 @@ class _OverallSpendingWidget extends StatelessWidget {
             color: colorOTPgrey.withOpacity(0.2),
             spreadRadius: 1,
             blurRadius: 10,
-            offset: Offset(0, -2), // changes position of shadow
+            offset: const Offset(0, -2), // changes position of shadow
       ),
       BoxShadow(
         color: Colors.black.withOpacity(0.4),
         spreadRadius: 2,
         blurRadius: 10,
-        offset: Offset(0, 1), // changes position of shadow
+        offset: const Offset(0, 1), // changes position of shadow
       )
       ]
       ),child:  Column(
@@ -265,7 +277,8 @@ class _OverallSpendingWidget extends StatelessWidget {
     Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [ Text(
-    backend.currentUser!=null ? backend.monthNamesInHungarian[backend.currentUser?.data?['currentUser']['extendedDataYearly']['hardestMonth']]!.toUpperCase(): 'JÚLIUS', // TODO inject user data
+    backend.currentUser!=null ?
+    backend.monthNamesInHungarian[backend.currentUser?.data?['currentUser']['extendedDataYearly']['hardestMonth']]!.toUpperCase(): 'JÚLIUS', // TODO inject user data
     style: const TextStyle(
     fontSize: 16,
     color: colorOTPgreen,
@@ -288,13 +301,13 @@ class _OverallSpendingWidget extends StatelessWidget {
     color: colorOTPgrey.withOpacity(0.2),
     spreadRadius: 1,
     blurRadius: 10,
-    offset: Offset(0, -2), // changes position of shadow
+    offset: const Offset(0, -2), // changes position of shadow
     ),
     BoxShadow(
     color: Colors.black.withOpacity(0.4),
     spreadRadius: 2,
     blurRadius: 10,
-    offset: Offset(0, 1), // changes position of shadow
+    offset: const Offset(0, 1), // changes position of shadow
     )
     ]
     ),child:  Column(
@@ -318,7 +331,9 @@ class _OverallSpendingWidget extends StatelessWidget {
     Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [ Text(
-    backend.currentUser!=null ? backend.monthNamesInHungarian[backend.currentUser?.data?['currentUser']['extendedDataYearly']['easiestMonth']]!.toUpperCase(): 'JÚLIUS', // TODO inject user data
+    backend.currentUser!=null ?
+    backend.monthNamesInHungarian[backend.currentUser?.data?['currentUser']['extendedDataYearly']['easiestMonth']]!.toUpperCase()
+    : 'JÚLIUS',
     style: const TextStyle(
     fontSize: 16,
     color: colorOTPgreen,
@@ -358,7 +373,7 @@ class _OverallSpendingWidget extends StatelessWidget {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [ Text( 'MEGLÁTOGATOTT ORSZÁGOK ✈️', // TODO inject user data
+              children: [ Text( 'MEGLÁTOGATOTT ORSZÁGOK ✈️',
                 style: TextStyle(
                   fontSize: 18,
                   color: colorOTPwhite,
@@ -374,7 +389,8 @@ class _OverallSpendingWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [ Text(
-                backend.currentUser!=null ? '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["visitedCountriesThisYear"]}': '5', // TODO inject user data
+                backend.currentUser!=null ?
+                '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["visitedCountriesThisYear"]}': '5',
                 style: const TextStyle(
                   fontSize: 16,
                   color: colorOTPgreen,
@@ -414,7 +430,7 @@ class _OverallSpendingWidget extends StatelessWidget {
           children: [
             const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [ Text( 'KEDVENC ORSZÁG 🏖️',
+                children: [ Text( 'KEDVENC NYARALÁSI CÉLPONT 🏖️',
                 style: TextStyle(
                   fontSize: 18,
                   color: colorOTPwhite,
@@ -430,7 +446,7 @@ class _OverallSpendingWidget extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [ Text(
-                backend.currentUser!=null ? '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["favouriteCountry"]}': 'Hungary', // TODO inject user data
+                backend.currentUser!=null ? '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["favouriteCountry"]}': 'Hungary',
                 style: const TextStyle(
                   fontSize: 16,
                   color: colorOTPgreen,
@@ -470,7 +486,7 @@ class _OverallSpendingWidget extends StatelessWidget {
     children: [
     const Row(
     mainAxisAlignment: MainAxisAlignment.center,
-    children: [ Text( 'KEDVENC KERESKEDŐ 💸', // TODO inject user data
+    children: [ Text( 'KEDVENC KERESKEDŐ 💸',
     style: TextStyle(
     fontSize: 18,
     color: colorOTPwhite,
@@ -486,7 +502,7 @@ class _OverallSpendingWidget extends StatelessWidget {
     Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [ Text(
-    backend.currentUser!=null ? '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["favouriteVendor"]}': 'SPAR', // TODO inject user data
+    backend.currentUser!=null ? '${backend.currentUser?.data!["currentUser"]["extendedDataYearly"]["favouriteVendor"]}': 'SPAR',
     style: const TextStyle(
     fontSize: 16,
     color: colorOTPgreen,

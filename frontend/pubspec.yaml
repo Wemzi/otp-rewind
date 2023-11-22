@@ -73,6 +73,7 @@ flutter:
       - resources/images/hud_main.jpg
       - resources/images/stat_icon_small.png
       - resources/images/conv_icon_small.png
+      - resources/images/loading_screen.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

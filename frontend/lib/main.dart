@@ -260,7 +260,7 @@ class RewindStartupPage extends StatelessWidget {
 }
 
 class MainPage extends State<OTPAppPage> {
-  bool isLogin = false;
+  bool isLogin = true;
   final _pageController = PageController(initialPage: 0);
   final _controllerBackground = ScrollController();
   final _controllerText = ScrollController();
@@ -300,7 +300,11 @@ class MainPage extends State<OTPAppPage> {
     backend.currentUser = await backend.getUserInfo(3);
     print(backend.currentUser?.name);
     setState((){
-      isLogin=false;
+      if(backend.currentUser != null)
+      {
+        isLogin=false;
+        Navigator.push(context, MaterialPageRoute(builder: (context) => build(context)));
+      }
     });
   }
   
@@ -334,7 +338,8 @@ class MainPage extends State<OTPAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
+    return isLogin ? Container(color: colorOTPdarkGrey, child: Image.asset("resources/images/loading_screen.png")) :
+    PageView(
       controller:_pageController,
       children: [
         Scaffold(
@@ -379,7 +384,7 @@ class MainPage extends State<OTPAppPage> {
                               )
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.5,bottom:0,right:0,top:0), //apply padding to all four sides
+                            padding: EdgeInsets.only(left:MediaQuery.of(context).size.width/ 2.6,bottom:0,right:0,top:0), //apply padding to all four sides
                             child: GestureDetector(
                               onTap: () {rewindTapped();},
                               child: SizedBox(
@@ -396,13 +401,13 @@ class MainPage extends State<OTPAppPage> {
                       ),
                         Row(
                         children: [
-                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.9,left:MediaQuery.of(context).size.width/10),
+                          Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/9.5,left:MediaQuery.of(context).size.width/10),
                               child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
                                 style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
                       ),
-                        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.3,),
+                        Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/4.45,),
                             child: Transform.rotate(angle: -math.pi / 1.2,
                               child: CircularPercentIndicator(
                                 radius: 130,
@@ -419,8 +424,8 @@ class MainPage extends State<OTPAppPage> {
                                 backgroundColor: Colors.transparent,
                               ),)
                         ),
-                      Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/30),
-                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.8),
+                      Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/65),
+                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.7),
                               child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.avgSpend} Ft',
                                 style: const TextStyle(color: colorOTPgrey, fontSize: 13),)
                           ),
