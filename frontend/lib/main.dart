@@ -262,7 +262,7 @@ class RewindStartupPage extends StatelessWidget {
 }
 
 class MainPage extends State<OTPAppPage> {
-  bool isLogin = false;
+  bool isLogin = true;
   final _pageController = PageController(initialPage: 0);
   final _controllerBackground = ScrollController();
   final _controllerText = ScrollController();
@@ -296,14 +296,13 @@ class MainPage extends State<OTPAppPage> {
   void login() async
   {
     //tells ui to refresh
-    setState(() {
-      isLogin = true;
-    });
     backend.currentUser = await backend.getUserInfo(3);
-    print(backend.currentUser?.name);
-    setState((){
-      isLogin=false;
-    });
+    if(backend.currentUser != null)
+      {
+        setState((){
+          isLogin=false;
+        }); 
+      }
   }
   
   Story getUser()
@@ -336,7 +335,8 @@ class MainPage extends State<OTPAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    return PageView(
+    return isLogin ? Container(color: colorOTPdarkGrey, child: Image.asset("resources/images/loading_screen.png")) :
+    PageView(
       controller:_pageController,
       children: [
         Scaffold(

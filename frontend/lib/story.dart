@@ -244,7 +244,7 @@ class _StoryScreenState extends State<StoryScreen>
                   Padding(
                     padding: const EdgeInsets.only(top: 400),
                     child: Center(
-                      child: Container(
+                      child: SizedBox(
                         height: MediaQuery.of(context).size.height / 2,
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: Column(
@@ -294,6 +294,7 @@ class _StoryScreenState extends State<StoryScreen>
                   padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20 ,left: 20),
                   child: FloatingActionButton(
                     onPressed: () async {
+                      _animationController.stop();
                       final image = await controller.capture();
                       saveAndShare(image!);
                     },
@@ -435,6 +436,7 @@ class _StoryScreenState extends State<StoryScreen>
     final image = File('${directory.path}/flutter.png');
     image.writeAsBytesSync(bytes);
     await Share.shareXFiles([XFile(image.path)]);
+    _animationController.forward();
   }
 }
 
