@@ -1,4 +1,5 @@
 from rewind.bigdata.details import GetDetailsData
+from rewind.ai.genText import GetGenAdvice
 
 def GetUserData(user):
     bigdata = GetDetailsData(user["id"])
@@ -7,6 +8,8 @@ def GetUserData(user):
     [topFacts.append(x) for x in sorted(bigdata["categoryDatas"], key=lambda x: x["topPercent"])[:5]]
     [topFacts.append(x) for x in sorted(bigdata["countryDatas"], key=lambda x: x["topPercent"])[:5]]
     topFacts = sorted(topFacts, key=lambda x: x["topPercent"])[:8]
+    for fact in topFacts:
+        fact["advice"] = GetGenAdvice(fact["name"], fact["type"])
     return {
         "id": user["id"],
         "name": user["name"],
