@@ -1,6 +1,13 @@
+
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:otp_rewind/main.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wave/config.dart';
 import "backend.dart" as backend;
 import 'backend.dart';
@@ -161,213 +168,143 @@ class _StoryScreenState extends State<StoryScreen>
     Color colorTheme1 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
     Color colorTheme2 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
     Color colorTheme3 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    final controller = ScreenshotController();
+
     return Stack(
       children: <Widget>[
         Container(
-          child: Stack(
-              children: [
-                Opacity(opacity: 0.5,
-                  child: ClipPath(
+          child: Screenshot(
+            controller: controller,
+            child: Stack(
+                children: [
+                  Opacity(opacity: 0.5,
+                    child: ClipPath(
+                      clipper: WaveClipper(),
+                      child: Container(
+                        color: colorOTPgreen,
+                        height: MediaQuery.of(context).size.height/3,
+                      )
+                    )
+                  ),
+                  ClipPath(
                     clipper: WaveClipper(),
                     child: Container(
                       color: colorOTPgreen,
-                      height: MediaQuery.of(context).size.height/3,
-                    )
-                  )
-                ),
-                ClipPath(
-                  clipper: WaveClipper(),
-                  child: Container(
-                    color: colorOTPgreen,
-                    height: (MediaQuery.of(context).size.height/3) - 20,
-                  )
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top:80, left: MediaQuery.of(context).size.width/2 - (75/2)),
-                    child: SizedBox(
-                      height: 75,
-                      width: 75,
-                      child: Image.asset("resources/images/rewind_icon_white_bg.png", fit: BoxFit.cover,),
-                    ),
-                  ),
-              WaveWidget(
-                  config: CustomConfig(
-                    colors: [colorTheme1,colorTheme2,colorTheme3,colorOTPgreen],
-                    durations: [10000,19440,12800,18000],
-                    heightPercentages: [0.69,0.69,0.69,0.70]
-                  ),
-                  size: const Size(double.infinity, double.infinity),
-              ),
-                Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 1.2),
-                    child:
-                    Stack(
-                      children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20 ,left: 20),
-                            child: FloatingActionButton(
-                              onPressed: () => {}, //TODO SHARE
-                              backgroundColor: colorOTPdarkGrey,
-                              foregroundColor: colorOTPgreen,
-                              child: const Icon(Icons.share),
-                            )
-                          ),
-                          Center(
-                              child: Text ("TOP ${cont.percentage}%", style: const TextStyle(color: colorOTPwhite,fontSize: 40,fontWeight: FontWeight.bold))
-                          )
-                        ],
-                      ),
-                    ),
-                Padding(
-                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 30, left: MediaQuery.of(context).size.width / 3 + 20,),
-                  child: Container(
-                      height: MediaQuery.of(context).size.height / 8,
-                      width: MediaQuery.of(context).size.width / 1.8,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(24.0),
-                          color: colorOTPgreen.withOpacity(0.4),
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorOTPgrey.withOpacity(0.2),
-                              spreadRadius: 1,
-                              blurRadius: 10,
-                              offset: const Offset(0, -2), // changes position of shadow
-                            ),
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.4),
-                              spreadRadius: 2,
-                              blurRadius: 10,
-                              offset: const Offset(0, 1), // changes position of shadow
-                            )
-                          ]
-                      ),
-                    child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,),
-                      ),
+                      height: (MediaQuery.of(context).size.height/3) - 20,
                     )
                   ),
+                  Padding(
+                    padding: EdgeInsets.only(top:80, left: MediaQuery.of(context).size.width/2 - (75/2)),
+                      child: SizedBox(
+                        height: 75,
+                        width: 75,
+                        child: Image.asset("resources/images/rewind_icon_white_bg.png", fit: BoxFit.cover,),
+                      ),
+                    ),
+                WaveWidget(
+                    config: CustomConfig(
+                      colors: [colorTheme1,colorTheme2,colorTheme3,colorOTPgreen],
+                      durations: [10000,19440,12800,18000],
+                      heightPercentages: [0.69,0.69,0.69,0.70]
+                    ),
+                    size: const Size(double.infinity, double.infinity),
                 ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 400),
-                    child: Center(
-                      child: Container(
-                        height: MediaQuery.of(context).size.height / 2,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: Column(
-                          children: [
-                            Row(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 1.2),
+                      child:
+                      Stack(
+                        children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20 ,left: 20),
+                              child: FloatingActionButton(
+                                onPressed: () async {
+                                  final image = await controller.capture();
+                                  saveAndShare(image!);
+                                },
+                                backgroundColor: colorOTPdarkGrey,
+                                foregroundColor: colorOTPgreen,
+                                child: const Icon(Icons.share),
+                              )
+                            ),
+                            Center(
+                                child: Text ("TOP ${cont.percentage}%", style: const TextStyle(color: colorOTPwhite,fontSize: 40,fontWeight: FontWeight.bold))
+                            )
+                          ],
+                        ),
+                      ),
+                  Padding(
+                    padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 30, left: MediaQuery.of(context).size.width / 3 + 20,),
+                    child: Container(
+                        height: MediaQuery.of(context).size.height / 8,
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24.0),
+                            color: colorOTPgreen.withOpacity(0.4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: colorOTPgrey.withOpacity(0.2),
+                                spreadRadius: 1,
+                                blurRadius: 10,
+                                offset: const Offset(0, -2), // changes position of shadow
+                              ),
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.4),
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                offset: const Offset(0, 1), // changes position of shadow
+                              )
+                            ]
+                        ),
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,),
+                        ),
+                      )
+                    ),
+                  ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 400),
+                      child: Center(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height / 2,
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          child: Column(
+                            children: [
+                              Row(
+                                  children: [
+                                    Expanded(
+                                      child: FittedBox(
+                                        fit: BoxFit.contain,
+                                        child: Text(cont.informationText! ,
+                                          style: const TextStyle(color: colorOTPwhite,fontWeight: FontWeight.bold),),
+                                        ),
+                                    ),
+                                  ],
+                              ),
+                              Row(
                                 children: [
                                   Expanded(
                                     child: FittedBox(
                                       fit: BoxFit.contain,
-                                      child: Text(cont.informationText! ,
-                                        style: const TextStyle(color: colorOTPwhite,fontWeight: FontWeight.bold),),
-                                      ),
+                                      child: Text(cont.name.toUpperCase(),
+                                        style: const TextStyle(color: colorOTPgreen,fontWeight: FontWeight.bold),),
+                                    ),
                                   ),
                                 ],
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: FittedBox(
-                                    fit: BoxFit.contain,
-                                    child: Text(cont.name.toUpperCase(),
-                                      style: const TextStyle(color: colorOTPgreen,fontWeight: FontWeight.bold),),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                    ),
-                  )
-                  )
-            ]
+                              ),
+                            ],
+                          ),
+                      ),
+                    )
+                    )
+              ]
+            ),
           )
         )
       ]
     );
-
   }
-
-  /*Widget _createPageContent(Content cont)
-  {
-    Color colorTheme1 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
-    Color colorTheme2 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
-    return Container(
-      color: colorOTPdarkGrey,
-      child: Column(
-        children: <Widget>[
-            Padding(padding: const EdgeInsets.only(top:60),
-                  child:SizedBox(width: 100, height: 100, child: Image.asset("resources/images/rewind_icon.png", fit: BoxFit.cover))
-            ),
-            Padding(padding: const EdgeInsets.only(top:20),
-              child: StoryBox(width: MediaQuery.of(context).size.width/1.1 ,radius: 80, height: MediaQuery.of(context).size.height/2, color1: colorTheme1, color2: colorTheme2,
-                  child: Column(
-                    children: <Widget>[
-                      ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Container(
-                            color: colorOTPdarkGrey,
-                            height: 50,
-                            width: MediaQuery.of(context).size.width/3,
-                            child: const Center(child:Text("Információ", style: TextStyle(color: colorOTPgrey, fontSize: 20),)),
-                          )
-                        ),
-                      Padding(padding: const EdgeInsets.only(top: 30),
-                          child: StoryBox(width: MediaQuery.of(context).size.width/1.6, radius: 50, color1: colorTheme1.darken(0.1), color2: colorTheme2.darken(0.1), height: 125,
-                                  child: Center(child:Text(cont.informationPlusInfo!, style: const TextStyle(color: colorOTPwhite,fontSize: 12, fontWeight: FontWeight.bold)))
-                          ),
-                      ),
-                        Padding(padding: const EdgeInsets.only(top: 30),
-                          child: SizedBox(
-                            child: Text(cont.informationText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
-                          )
-                      ),
-                    ],
-                  )),
-            ),
-          Padding(padding: EdgeInsets.only(top:  MediaQuery.of(context).size.height/30),
-              child: StoryBox(width: MediaQuery.of(context).size.width/1.1 ,radius: 40, height: MediaQuery.of(context).size.height/6, color1: colorTheme1, color2: colorTheme2,
-                child:Column(
-                    children: <Widget>[
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(color: colorOTPdarkGrey,
-                        height: 50,
-                        width: MediaQuery.of(context).size.width/3,
-                          child: const Center(child:Text("Statisztika", style: TextStyle(color: colorOTPgrey, fontSize: 20),)),
-                      )
-                    ),
-                      Padding(padding: const EdgeInsets.only(top: 10),
-                          child: SizedBox(
-                            child: Text(cont.statText!,style: const TextStyle(color: colorOTPwhite, fontSize: 35, fontWeight: FontWeight.bold), textAlign: TextAlign.right,),
-                          )
-                      ),
-                   ]
-                )
-          )
-          ),
-          Padding(padding: const EdgeInsets.only(top:  1),
-              child: Center(
-                child:
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                    child: FloatingActionButton(
-                        onPressed: () => {}, //TODO SHARE
-                        backgroundColor: colorOTPdarkGrey,
-                        foregroundColor: colorOTPgreen,
-                        child: const Icon(Icons.share),
-                    ),
-                  ),
-              )
-          )
-        ],
-      )
-    );
-  }*/
   
   @override
   void dispose() {
@@ -400,6 +337,18 @@ class _StoryScreenState extends State<StoryScreen>
               }
             },
           onTapUp: (details) => {
+            if(!isPushed) _animationController.forward()
+          },
+          onVerticalDragDown: (details) => {
+            _animationController.stop()
+          },
+          onHorizontalDragDown: (details) => {
+            _animationController.forward()
+          },
+          onVerticalDragEnd: (details) => {
+            if(!isPushed) _animationController.forward()
+          },
+          onHorizontalDragEnd: (details) => {
             if(!isPushed) _animationController.forward()
           },
           child: Stack(
@@ -477,6 +426,13 @@ class _StoryScreenState extends State<StoryScreen>
     if(animateToPage){
       _pageController.animateToPage(_currentIndex, duration: const Duration(microseconds: 1), curve: Curves.easeInOut);
     }
+  }
+
+  Future saveAndShare(Uint8List bytes) async{
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File('${directory.path}/flutter.png');
+    image.writeAsBytesSync(bytes);
+    await Share.shareXFiles([XFile(image.path)]);
   }
 }
 
