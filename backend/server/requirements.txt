@@ -3,3 +3,4 @@ Django
 djangorestframework
 pyspark
 deep_translator
+translator
