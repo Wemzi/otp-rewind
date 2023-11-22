@@ -24,15 +24,11 @@ def GetTopPercent(df, user_id, groupName):
 
 
 def GetAverage(df,user_id, groupName):
-    groups = df.select(col(groupName).alias("name")).distinct().collect()
     groupsdata = {}
+    groups = df.filter(df.id == user_id).groupBy([df[groupName].alias("name"), month("date").alias("month")]).agg(sum("balance").alias("amount")).groupBy("name").agg(avg("amount").alias("avgAmount")).collect() 
+
     for group in groups:
-        avgAmount = df.filter(df.id == user_id)\
-                    .filter(df[groupName] == group.name)\
-                    .groupBy(month("date").alias("month"))\
-                    .agg(sum("balance").alias("allAmount"))\
-                    .select(avg("allAmount").alias("avgAmount")).collect()[0].avgAmount
-        groupsdata[group.name] = int(round(avgAmount))
+        groupsdata[group.name] = int(round(group.avgAmount))
     return groupsdata        
  
 def GetDetailsData(user_id : int) :
@@ -44,7 +40,7 @@ def GetDetailsData(user_id : int) :
         "countryDatas" :  GetTopPercent(df,user_id,"country"),
         "visitedCountriesThisYear" : df.filter(df.id == user_id).select("country").distinct().count(),
         "hardestMounth" : monthOrder[0].month,
-        "easiestMounth" : monthOrder[0].month,
+        "easiestMounth" : monthOrder[-1].month,
         "favoriteCountry" : df.filter(df.id == user_id).groupBy("country").agg(sum(df.balance).alias("amount")).orderBy(desc("amount")).collect()[0].country,
         "favoriteVendor" : df.filter(df.id == user_id).groupBy("vendor").agg(sum(df.balance).alias("amount")).orderBy(desc("amount")).collect()[0].vendor,
         "vendorAvgDatas" :  GetAverage(df,user_id,"vendor"),
@@ -52,4 +48,5 @@ def GetDetailsData(user_id : int) :
         "countryAvgDatas" :  GetAverage(df,user_id,"country"),
         "averageSpend" :  df.filter(df.id == user_id).groupBy(month("date").alias("month")).agg(sum("balance").alias("amount")).select(avg("amount").alias("avgamount")).collect()[0].avgamount
     }
+    
     
