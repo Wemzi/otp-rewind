@@ -34,7 +34,7 @@ class UserApiView(APIView):
             return None
 
     # 3. Retrieve
-    @method_decorator(cache_page(60*60*12))
+    @method_decorator(cache_page(60*60*24))
     def get(self, request, user_id, *args, **kwargs):
         '''
         Retrieves the UserInfo with given user id
