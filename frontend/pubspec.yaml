@@ -29,6 +29,7 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   percent_indicator: ^4.0.1
+  wave: ^0.2.2
   flutter:
     sdk: flutter
   http: any
@@ -64,6 +65,7 @@ flutter:
   assets:
       - resources/images/main_blank.jpg
       - resources/images/rewind_icon.png
+      - resources/images/rewind_icon_white_bg.png
       - resources/images/rewind_icon_small_color.png
       - resources/images/rewind_icon_small_grey.png
       - resources/images/hud_main.jpg

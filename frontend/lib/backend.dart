@@ -87,7 +87,9 @@ class User {
       var content = Content(name: element['name'],
           percentage: element['topPercent'],
           amount: element['amount'],
-          type: getType(element['type']));
+          type: getType(element['type']),
+          informationPlusInfo: utf8.decode(element['advice'].runes.toList())
+          );
       content.updateContentTexts();
       storyContent.add(content);
     }
@@ -103,8 +105,7 @@ User? currentUser;
 
 class Content{
   String? informationText;
-  String? informationPlusInfo;
-  String? statText;
+  final String informationPlusInfo;
   final String name;
   final double percentage;
   final int amount;
@@ -115,26 +116,20 @@ class Content{
     required this.percentage,
     required this.amount,
     required this.type,
+    required this.informationPlusInfo,
   });
 
   void updateContentTexts()
   {
     switch(type){
       case Type.VENDOR:
-        informationText = "KEDVENC KERESKEDŐ\n$name";
-        informationPlusInfo = '"Ebben a hónapban kimagaslóan sokat jártál kedvenc élelmiszerüzletláncodba. Ez 120%-al nagyobb költés mint előző hónapban."'; //TODO AI??
-        statText = "Legmagasabb ${percentage}%";
+        informationText = "KEDVENC KERESKEDŐ";
       case Type.CATEGORY:
-        informationText = "KEDVENC KATEGÓRIA\n$name";
-        informationPlusInfo = "IDE GENERÁLUNK AI-VAL IDE GENERÁLUNK AI-VAL SZÖVEGET MAJD SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
-        statText = "Legmagasabb ${percentage}%";
+        informationText = "KEDVENC KATEGÓRIA";
       case Type.COUNTRY:
-        informationText = "KEDVENC ORSZÁG\n$name";
-        informationPlusInfo = "IDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJDIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\nIDE GENERÁLUNK AI-VAL SZÖVEGET MAJD\n";
-        statText = "Legmagasabb ${percentage}%";
+        informationText = "KEDVENC ORSZÁG";
       default:
         break;
     }
   }
-
 }

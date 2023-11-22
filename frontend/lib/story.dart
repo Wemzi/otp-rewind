@@ -1,10 +1,35 @@
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:otp_rewind/main.dart';
+import 'package:wave/config.dart';
 import "backend.dart" as backend;
 import 'backend.dart';
 import 'end.dart';
+import 'package:wave/wave.dart';
 
+
+class WaveClipper extends CustomClipper<Path>{
+  @override
+  Path getClip(Size size) {
+    var path = new Path();
+    path.lineTo(0, size.height);
+    var firstStart = Offset(size.width/ 5, size.height);
+    var firstEnd = Offset(size.width/ 2.25, size.height - 50.0);
+    path.quadraticBezierTo(firstStart.dx, firstStart.dy, firstEnd.dx, firstEnd.dy);
+    var secondStart = Offset(size.width - (size.width / 3.24), size.height - 105);
+    var secondEnd = Offset(size.width, size.height - 10.0);
+    path.quadraticBezierTo(secondStart.dx, secondStart.dy, secondEnd.dx, secondEnd.dy);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
+  }
+
+}
 
 extension ColorBrightness on Color {
   Color darken([double amount = .1]) {
@@ -92,16 +117,17 @@ class StoryScreen extends StatefulWidget{
 }
 
 class _StoryScreenState extends State<StoryScreen>
-    with SingleTickerProviderStateMixin{
+    with SingleTickerProviderStateMixin {
 
   bool isPushed = false;
   late PageController _pageController;
   late AnimationController _animationController;
   int _currentIndex = 0;
 
-  void _pushNavigator(BuildContext context){
+  void _pushNavigator(BuildContext context) {
     isPushed = true;
-    Navigator.push(context, MaterialPageRoute(builder: (context) => EndScreen(user: backend.currentUser)));
+    Navigator.push(context, MaterialPageRoute(
+        builder: (context) => EndScreen(user: backend.currentUser)));
   }
 
   @override
@@ -111,17 +137,17 @@ class _StoryScreenState extends State<StoryScreen>
     _animationController = AnimationController(vsync: this);
 
     final Content firstContent = widget.story.user.storyContent.first;
-    _loadStory(story: firstContent,animateToPage: false);
+    _loadStory(story: firstContent, animateToPage: false);
 
     _animationController.addStatusListener((status) {
-      if(status == AnimationStatus.completed){
+      if (status == AnimationStatus.completed) {
         _animationController.stop();
         _animationController.reset();
         setState(() {
-          if(_currentIndex + 1 < widget.story.user.storyContent.length) {
+          if (_currentIndex + 1 < widget.story.user.storyContent.length) {
             _currentIndex += 1;
             _loadStory(story: widget.story.user.storyContent[_currentIndex]);
-          }else{
+          } else {
             _animationController.stop();
             _pushNavigator(context);
           }
@@ -129,7 +155,121 @@ class _StoryScreenState extends State<StoryScreen>
       }
     });
   }
-  Widget _createPageContent(Content cont)
+
+  Widget _createPageContentNew(Content cont)
+  {
+    Color colorTheme1 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    Color colorTheme2 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    Color colorTheme3 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
+    return Stack(
+      children: <Widget>[
+        Container(
+          child: Stack(
+              children: [
+                Opacity(opacity: 0.5,
+                  child: ClipPath(
+                    clipper: WaveClipper(),
+                    child: Container(
+                      color: colorOTPgreen,
+                      height: MediaQuery.of(context).size.height/3,
+                    )
+                  )
+                ),
+                ClipPath(
+                  clipper: WaveClipper(),
+                  child: Container(
+                    color: colorOTPgreen,
+                    height: (MediaQuery.of(context).size.height/3) - 20,
+                  )
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top:80, left: MediaQuery.of(context).size.width/2 - (75/2)),
+                    child: SizedBox(
+                      height: 75,
+                      width: 75,
+                      child: Image.asset("resources/images/rewind_icon_white_bg.png", fit: BoxFit.cover,),
+                    ),
+                  ),
+              WaveWidget(
+                  config: CustomConfig(
+                    colors: [colorTheme1,colorTheme2,colorTheme3,colorOTPgreen],
+                    durations: [10000,19440,12800,18000],
+                    heightPercentages: [0.69,0.69,0.69,0.70]
+                  ),
+                  size: const Size(double.infinity, double.infinity),
+              ),
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 1.2),
+                    child:
+                    Stack(
+                      children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 20 ,left: 20),
+                            child: FloatingActionButton(
+                              onPressed: () => {}, //TODO SHARE
+                              backgroundColor: colorOTPdarkGrey,
+                              foregroundColor: colorOTPgreen,
+                              child: const Icon(Icons.share),
+                            )
+                          ),
+                          Center(
+                              child: Text ("TOP ${cont.percentage}%", style: const TextStyle(color: colorOTPwhite,fontSize: 40,fontWeight: FontWeight.bold))
+                          )
+                        ],
+                      ),
+                    ),
+                Padding(
+                  padding: EdgeInsets.only(top: MediaQuery.of(context).size.height / 3 - 40, left: MediaQuery.of(context).size.width / 3 + 20,),
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height / 9,
+                    width: MediaQuery.of(context).size.width / 1.9,
+                    child: Text(cont.informationPlusInfo, style: const TextStyle(color: colorOTPwhite,fontSize: 11, fontWeight: FontWeight.bold), textAlign: TextAlign.justify,)
+                  ),
+                ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 400),
+                    child: Center(
+                      child: Container(
+                        height: MediaQuery.of(context).size.height / 2,
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        child: Column(
+                          children: [
+                            Row(
+                                children: [
+                                  Expanded(
+                                    child: FittedBox(
+                                      fit: BoxFit.contain,
+                                      child: Text(cont.informationText! ,
+                                        style: const TextStyle(color: colorOTPwhite,fontWeight: FontWeight.bold),),
+                                      ),
+                                  ),
+                                ],
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: FittedBox(
+                                    fit: BoxFit.contain,
+                                    child: Text(cont.name.toUpperCase(),
+                                      style: const TextStyle(color: colorOTPgreen,fontWeight: FontWeight.bold),),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                    ),
+                  )
+                  )
+            ]
+          )
+        )
+      ]
+    );
+
+  }
+
+  /*Widget _createPageContent(Content cont)
   {
     Color colorTheme1 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
     Color colorTheme2 = Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0);
@@ -204,7 +344,7 @@ class _StoryScreenState extends State<StoryScreen>
         ],
       )
     );
-  }
+  }*/
   
   @override
   void dispose() {
@@ -246,7 +386,7 @@ class _StoryScreenState extends State<StoryScreen>
                 controller: _pageController,
                 itemBuilder: (context, i) {
                   final Content cont = widget.story.user.storyContent[i];
-                  return _createPageContent(cont);
+                  return _createPageContentNew(cont);
                 }
             ),
               Positioned(
