@@ -32,6 +32,7 @@ dependencies:
   wave: ^0.2.2
   screenshot: ^2.1.0
   share_plus: ^7.2.1
+  intl: ^0.17.0
   flutter:
     sdk: flutter
   http: any

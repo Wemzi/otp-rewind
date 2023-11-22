@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:otp_rewind/story.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import "backend.dart" as backend;
@@ -26,6 +27,7 @@ const colorOTPdarkGreen = Color.fromARGB(255, 43, 101, 78);
 const colorOTPMidGrey = Color.fromARGB(255, 54, 56, 60);
 const colorOTPlightGrey = Color.fromARGB(255,160,165,176);
 bool firstTime = true;
+var formatter = NumberFormat('#,###');
 
 class MyBox extends StatelessWidget {
   final Color color;
@@ -397,7 +399,7 @@ class MainPage extends State<OTPAppPage> {
                         Row(
                         children: [
                           Padding(padding: EdgeInsets.only(top:MediaQuery.of(context).size.height/8.9,left:MediaQuery.of(context).size.width/10),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.balance} Ft',
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${formatter.format(backend.currentUser!.balance).replaceAll(',', ' ')} Ft',
                                 style: const TextStyle(color: colorOTPwhite),)
                           ),
                         ],
@@ -420,8 +422,8 @@ class MainPage extends State<OTPAppPage> {
                               ),)
                         ),
                       Padding(padding:EdgeInsets.only(top:MediaQuery.of(context).size.height/30),
-                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.8),
-                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${backend.currentUser!.avgSpend} Ft',
+                          child: Padding(padding:EdgeInsets.only(left:MediaQuery.of(context).size.width/2.7),
+                              child: Text(backend.currentUser == null ? "600 000 Ft" : '${formatter.format(backend.currentUser!.avgSpend).replaceAll(',', ' ')} Ft',
                                 style: const TextStyle(color: colorOTPgrey, fontSize: 13),)
                           ),
                       ),
