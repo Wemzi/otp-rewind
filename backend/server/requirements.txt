@@ -2,4 +2,4 @@ mysqlclient
 Django
 djangorestframework
 pyspark
-translate
+deep_translator

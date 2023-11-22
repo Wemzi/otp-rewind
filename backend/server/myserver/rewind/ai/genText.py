@@ -1,10 +1,10 @@
 import json
 import requests
-from translate import Translator
+from deep_translator import GoogleTranslator
 
 headers = {"Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiYjhmOTdmMDItN2JkNS00NDZkLTgzODMtMWU5ZjM3NjEwYTY2IiwidHlwZSI6ImFwaV90b2tlbiJ9.C6QKw3-54iH5bZOLWObLeli5okI8bAxSwriD7gvGXjk"}
 url ="https://api.edenai.run/v2/text/generation"
-translator= Translator(to_lang="hu")
+translator = GoogleTranslator(source='auto', target='hu')
 
 def GetGenAdvice(name, type):
     if type == "vendor":
