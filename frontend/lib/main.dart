@@ -296,7 +296,7 @@ class MainPage extends State<OTPAppPage> {
   void login() async
   {
     //tells ui to refresh
-    backend.currentUser = await backend.getUserInfo(3);
+    backend.currentUser = await backend.getUserInfo(1);
     if(backend.currentUser != null)
       {
         setState((){
@@ -312,11 +312,10 @@ class MainPage extends State<OTPAppPage> {
   
   void rewindTapped()
   {
-    print("Rewind tapped");
-    if(backend.currentUser!=null && firstTime)
+    if(firstTime)
     {
       Navigator.push(context, MaterialPageRoute(builder: (context) => const RewindStartupPage()));
-    }else if (backend.currentUser!=null){
+    }else{
       Navigator.push(context, MaterialPageRoute(builder: (context) => StoryScreen(story: getUser())));
     }
 
@@ -335,8 +334,7 @@ class MainPage extends State<OTPAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    return isLogin ? Container(color: colorOTPdarkGrey, child: Image.asset("resources/images/loading_screen.png")) :
-    PageView(
+    return PageView(
       controller:_pageController,
       children: [
         Scaffold(
