@@ -1,4 +1,5 @@
-# OTP Rewind
+# OTP Rewind 
+![Screenshot 2024-05-03 at 19 11 23](https://github.com/Wemzi/otp-rewind/assets/55751876/84db03b2-a775-4762-834e-1636d3fc45aa) 
 
 ## What is it?
 OTP Rewind is a complete application for Android and iOS, 
